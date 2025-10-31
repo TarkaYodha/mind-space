@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { PrivacyBadge } from "@/components/ui/privacy-badge"
 
@@ -14,52 +17,57 @@ export function Footer({ className }: FooterProps) {
       title: "Platform",
       links: [
         { name: "Dashboard", href: "/dashboard" },
-        { name: "AI Chat Support", href: "/chat" },
-        { name: "Share Feedback", href: "/feedback" },
+        { name: "Wellness Tools", href: "/tools" },
       ],
     },
     {
-      title: "Features",
+      title: "Resources",
       links: [
-        { name: "Mental Health Assessments", href: "/assessments" },
-        { name: "Wellness Tools", href: "/tools" },
+        { name: "Resource Library", href: "/resources" },
+        { name: "Expert Directory", href: "/reference" },
         { name: "Emergency Help", href: "/emergency" },
       ],
     },
     {
-      title: "Guides",
+      title: "Support",
       links: [
-        { name: "Resource Library", href: "/resources" },
-        { name: "Expert Directory", href: "/reference" },
+        { name: "Appointments", href: "/appointments" },
         { name: "Contact Support", href: "/contact" },
+        { name: "Share Feedback", href: "/feedback" },
       ],
     },
   ]
 
   return (
     <footer className={cn("bg-gradient-to-br from-muted/20 via-background to-muted/30 border-t border-border/30", className)}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Section */}
-          <div className="lg:col-span-1 space-y-6">
-            <Link href="/" className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-105">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold text-lg shadow-medium group-hover:shadow-glow transition-all duration-300">
-                M
-              </div>
+          <div className="lg:col-span-1 space-y-4 md:text-left text-center">
+            <Link href="/" className="flex items-center space-x-3 group transition-transform duration-300 hover:scale-105 md:justify-start justify-center">
+              <Image
+                src="/logo.png"
+                alt="MindSpace Logo"
+                width={40}
+                height={40}
+                className="h-10 w-10 rounded-full object-cover group-hover:shadow-glow transition-all duration-300"
+              />
               <div className="flex flex-col">
                 <span className="font-bold text-xl text-foreground group-hover:text-primary transition-colors duration-300">MindSpace</span>
                 <span className="text-xs text-muted-foreground">Anonymous Support</span>
               </div>
             </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed text-pretty">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Confidential, stigma-free mental health support designed specifically for college students.
             </p>
-            <PrivacyBadge size="sm" className="shadow-subtle" />
+            <div className="md:flex md:justify-start justify-center flex">
+              <PrivacyBadge size="sm" className="shadow-subtle" />
+            </div>
           </div>
 
           {/* Footer Links */}
           {footerSections.map((section) => (
-            <div key={section.title} className="space-y-4">
+            <div key={section.title} className="space-y-4 md:text-left text-center">
               <h3 className="font-semibold text-foreground text-sm uppercase tracking-wider">{section.title}</h3>
               <ul className="space-y-3">
                 {section.links.map((link) => (
@@ -78,12 +86,12 @@ export function Footer({ className }: FooterProps) {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-16 pt-8 border-t border-border/30">
-          <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0 gap-6">
-            <div className="text-sm text-muted-foreground">© {currentYear} MindSpace. All rights reserved.</div>
+        <div className="mt-8 pt-6 border-t border-border/30">
+          <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0 gap-4">
+            <div className="text-sm text-muted-foreground text-center lg:text-left">© {currentYear} MindSpace. All rights reserved.</div>
             
             {/* Social Media Links */}
-            <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-6 flex-wrap justify-center">
               <div className="text-xs text-muted-foreground font-medium">Follow us:</div>
               <div className="flex space-x-4">
                 <Link
@@ -133,8 +141,8 @@ export function Footer({ className }: FooterProps) {
               </div>
             </div>
             
-            <div className="flex items-center space-x-6">
-              <div className="text-xs text-muted-foreground bg-muted/50 px-3 py-2 rounded-full border border-border/30">
+            <div className="flex items-center justify-center lg:justify-end w-full lg:w-auto">
+              <div className="text-xs text-muted-foreground bg-muted/50 px-3 py-2 rounded-full border border-border/30 text-center">
                 Crisis Support: Call 988 or Text HOME to 741741
               </div>
             </div>

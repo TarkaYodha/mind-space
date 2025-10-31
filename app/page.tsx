@@ -4,14 +4,14 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Shield, Users, Brain, Leaf } from "lucide-react"
 import { useState } from "react"
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa"
 import { NavBar } from "@/components/layout/navbar"
+import { Footer } from "@/components/layout/footer"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MessageSquare, Star, CheckCircle2 } from "lucide-react"
+import { CheckCircle2 } from "lucide-react"
 
 export default function Home() {
 
@@ -367,25 +367,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-[#05112e] text-white h-[144px] flex flex-col items-center justify-center">
-        <div className="text-2xl font-bold mb-4">MindSpace</div>
-        <div className="flex space-x-6 mb-4">
-          <a href="https://www.facebook.com/profile.php?id=61581178740012" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-500 transition-colors">
-            <FaFacebookF size={24} />
-          </a>
-          <a href="https://x.com/MindSpace125868" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-400 transition-colors">
-            <FaTwitter size={24} />
-          </a>
-          <a href="https://www.instagram.com/mindspace550/#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-pink-500 transition-colors">
-            <FaInstagram size={24} />
-          </a>
-          <a href="http://www.linkedin.com/in/mindspace-web-48200a386" target="_blank" rel="noopener noreferrer" className="text-white hover:text-blue-700 transition-colors">
-            <FaLinkedinIn size={24} />
-          </a>
-        </div>
-        <p className="text-sm text-center">&copy; {new Date().getFullYear()} MindSpace. All rights reserved.</p>
-      </footer>
+      <Footer />
     </>
   )
 }

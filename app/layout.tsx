@@ -1,16 +1,43 @@
 import type React from "react"
-// import type { Metadata } from "next"
+import type { Metadata } from "next"
 import "./globals.css"
 import { Suspense } from "react"
 import { ClerkProvider } from "@clerk/nextjs"
+import { validateEnv } from "@/lib/env-validation"
 
-// export const metadata: Metadata = {
-//   title: "MindSpace - Confidential Mental Health Support for Students",
-//   description:
-//     "Anonymous, stigma-free mental health platform for college students. AI-powered support, clinical assessments, and crisis intervention resources.",
-//   generator: "v0.app",
-//   keywords: ["mental health", "college students", "counseling", "anonymous support", "crisis intervention"],
-// }
+// Validate environment variables on server startup
+if (typeof window === 'undefined') {
+  const validation = validateEnv()
+  
+  if (!validation.isValid) {
+    console.error('❌ Missing required environment variables:')
+    validation.missing.forEach(v => console.error(`  - ${v}`))
+    console.error('\n📝 Please create a .env.local file based on .env.example')
+  }
+  
+  if (validation.warnings.length > 0) {
+    console.warn('⚠️  Environment Configuration Warnings:')
+    validation.warnings.forEach(w => console.warn(`  - ${w}`))
+  }
+}
+
+export const metadata: Metadata = {
+  title: "MindSpace - Confidential Mental Health Support for Students",
+  description:
+    "Anonymous, stigma-free mental health platform for college students. AI-powered support, clinical assessments, and crisis intervention resources.",
+  keywords: ["mental health", "college students", "counseling", "anonymous support", "crisis intervention"],
+  authors: [{ name: "MindSpace Team" }],
+  openGraph: {
+    title: "MindSpace - Mental Health Support for Students",
+    description: "Anonymous, stigma-free mental health platform for college students",
+    type: "website",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 5,
+  },
+}
 
 const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 

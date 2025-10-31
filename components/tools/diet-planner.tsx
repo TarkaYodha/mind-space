@@ -11,9 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Calendar, Users, Target, Apple, Flame, Activity, ChefHat, Clock, TrendingUp, Heart, Droplet, Zap, Brain, Moon, Sun, UtensilsCrossed, AlertCircle, Download, Share2, RefreshCw } from 'lucide-react';
+import { Sparkles, Calendar, Target, Apple, Flame, Activity, ChefHat, Clock, TrendingUp, Heart, Droplet, Zap, Brain, Moon, UtensilsCrossed, Download, Share2, RefreshCw } from 'lucide-react';
 
 interface UserProfile {
   age: string;
@@ -188,6 +187,7 @@ export function DietPlannerInterface() {
           if (data.success && data.mealPlan) {
             // Calculate total nutrition from AI-generated meals
             const totalNutrition = data.mealPlan.meals.reduce(
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (acc: any, meal: Meal) => ({
                 calories: acc.calories + meal.calories,
                 protein: acc.protein + meal.protein,
@@ -202,7 +202,7 @@ export function DietPlannerInterface() {
               day,
               meals: data.mealPlan.meals,
               totalNutrition,
-              tips: data.mealPlan.tips || generateDailyTips(profile.goals),
+              tips: data.mealPlan.tips || generateDailyTips(),
               hydrationReminders: data.mealPlan.hydrationReminders || [
                 '8:00 AM - Start your day with 500ml water',
                 '12:00 PM - Drink water before lunch',
@@ -258,7 +258,7 @@ export function DietPlannerInterface() {
         fats: goals.fats,
         fiber: goals.fiber,
       },
-      tips: generateDailyTips(profile.goals),
+      tips: generateDailyTips(),
       hydrationReminders: [
         '8:00 AM - Start your day with 500ml water',
         '12:00 PM - Drink water before lunch',
@@ -301,7 +301,6 @@ export function DietPlannerInterface() {
     const isVegetarian = profile.dietaryPreferences === 'vegetarian';
     const isVegan = profile.dietaryPreferences === 'vegan';
     const isKeto = profile.dietaryPreferences === 'keto';
-    const isPaleo = profile.dietaryPreferences === 'paleo';
 
     return {
       Breakfast: [
@@ -669,7 +668,7 @@ export function DietPlannerInterface() {
     };
   };
 
-  const generateDailyTips = (goals: string[]): string[] => {
+  const generateDailyTips = (): string[] => {
     const allTips = [
       '💧 Drink a glass of water upon waking to kickstart metabolism',
       '🥗 Eat the rainbow - diverse colors mean diverse nutrients',

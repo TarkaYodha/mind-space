@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs"
-import { HeartIcon, MenuIcon, XIcon } from "@/components/ui/icons"
+import { MenuIcon, XIcon } from "@/components/ui/icons"
 import { NAV_LINKS } from "@/lib/constants/navigation"
 
 interface HeaderProps {
@@ -47,23 +47,13 @@ export function Header({ className, showAuth = true }: HeaderProps) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 lg:h-18 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group transition-all duration-300 hover:scale-105">
-            <div className="relative">
-              <Image
-                src="/mindspace-logo.png"
-                alt="MindSpace Logo"
-                width={40}
-                height={40}
-                className="rounded-lg group-hover:shadow-glow transition-all duration-300"
-                priority
-                onError={(event) => {
-                  event.currentTarget.style.display = "none"
-                  event.currentTarget.nextElementSibling?.classList.remove("hidden")
-                }}
-              />
-              <div className="hidden h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground font-bold text-lg shadow-medium group-hover:shadow-glow transition-all duration-300">
-                <HeartIcon className="h-5 w-5" />
-              </div>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="MindSpace Logo"
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full object-cover group-hover:shadow-glow transition-all duration-300"
+            />
             <div className="flex flex-col">
               <span className="font-bold text-xl text-foreground leading-none group-hover:text-primary transition-colors duration-300">
                 MindSpace

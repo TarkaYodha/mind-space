@@ -27,7 +27,9 @@ export function ChatInterface() {
   const [speechRate, setSpeechRate] = useState(0.85)
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const synthRef = useRef<any>(null)
 
   useEffect(() => {
@@ -45,7 +47,9 @@ export function ChatInterface() {
   function initializeSpeech() {
     if (typeof window !== 'undefined') {
       // Check for speech recognition support
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition()
         recognitionRef.current.continuous = false
@@ -56,6 +60,7 @@ export function ChatInterface() {
           setIsListening(true)
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognitionRef.current.onresult = (event: any) => {
           const transcript = event.results[0][0].transcript
           setInput(transcript)
@@ -65,6 +70,7 @@ export function ChatInterface() {
           setIsListening(false)
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error)
           setIsListening(false)
@@ -236,6 +242,7 @@ export function ChatInterface() {
     // Load chat history from localStorage instead of Supabase
     const savedMessages = localStorage.getItem('chat-history')
     if (savedMessages) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsedMessages = JSON.parse(savedMessages).map((msg: any) => ({
         ...msg,
         timestamp: new Date(msg.timestamp)

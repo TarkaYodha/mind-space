@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { validateDietProfile } from "@/lib/security"
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
@@ -399,13 +400,42 @@ Provide supportive, realistic meals that fit a student schedule and estimate mac
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // Parse request body
+    let body
+    try {
+      body = await request.json()
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Invalid request body" },
+        { status: 400 }
+      )
+    }
+
     const profile: DietPlannerProfile | undefined = body?.profile
     const dayOfWeek: string | undefined = body?.dayOfWeek
 
+    // Validate required fields
     if (!profile || !dayOfWeek) {
       return NextResponse.json(
         { success: false, error: "Profile and dayOfWeek are required" },
+        { status: 400 }
+      )
+    }
+
+    // Validate profile structure
+    const profileValidation = validateDietProfile(profile)
+    if (!profileValidation.valid) {
+      return NextResponse.json(
+        { success: false, error: profileValidation.error },
+        { status: 400 }
+      )
+    }
+
+    // Validate dayOfWeek
+    const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    if (typeof dayOfWeek !== 'string' || !validDays.includes(dayOfWeek)) {
+      return NextResponse.json(
+        { success: false, error: "Invalid day of week" },
         { status: 400 }
       )
     }

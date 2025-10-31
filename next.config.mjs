@@ -2,15 +2,6 @@
 const nextConfig = {
   // Production-ready settings
   reactStrictMode: true,
-  swcMinify: true,
-  
-  // Build settings - temporary ignore for deployment
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   
   // Image optimization for Vercel
   images: {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
+import { validateMessage } from '@/lib/security'
 
 // Primary service: Google Gemini
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
@@ -58,14 +59,29 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { message } = await request.json()
-
-    if (!message || typeof message !== 'string') {
+    // Parse and validate request body
+    let body
+    try {
+      body = await request.json()
+    } catch {
       return NextResponse.json(
-        { error: 'Message is required' },
+        { error: 'Invalid request body' },
         { status: 400 }
       )
     }
+
+    const { message } = body
+
+    // Validate and sanitize message
+    const validation = validateMessage(message)
+    if (!validation.valid) {
+      return NextResponse.json(
+        { error: validation.error || 'Invalid message' },
+        { status: 400 }
+      )
+    }
+
+    const sanitizedMessage = validation.sanitized!
 
     // Check for crisis keywords for enhanced detection
     const crisisKeywords = [
@@ -76,7 +92,7 @@ export async function POST(request: NextRequest) {
     ]
     
     const containsCrisisLanguage = crisisKeywords.some(keyword => 
-      message.toLowerCase().includes(keyword.toLowerCase())
+      sanitizedMessage.toLowerCase().includes(keyword.toLowerCase())
     )
 
     let aiResponse: string | null = null
@@ -94,7 +110,7 @@ export async function POST(request: NextRequest) {
           body: JSON.stringify({
             contents: [{
               parts: [{
-                text: `You are a compassionate AI mental health assistant. Respond helpfully to: ${message}`
+                text: `You are a compassionate AI mental health assistant. Respond helpfully to: ${sanitizedMessage}`
               }]
             }]
           })
@@ -135,7 +151,7 @@ export async function POST(request: NextRequest) {
               },
               {
                 role: 'user',
-                content: message
+                content: sanitizedMessage
               }
             ],
             max_tokens: 300,

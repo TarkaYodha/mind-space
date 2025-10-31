@@ -1,6 +1,7 @@
 "use client"
 
-import { NavBar } from "@/components/layout/page-layout"
+import { NavBar } from "@/components/layout/navbar"
+import { Footer } from "@/components/layout/footer"
 import { TypographyH1, TypographyH2, TypographyH3, TypographyP, TypographyLead } from "@/components/ui/typography"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"

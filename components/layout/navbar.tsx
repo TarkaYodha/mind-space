@@ -23,7 +23,7 @@ export function NavBar({ currentPage }: NavBarProps) {
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
         <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity duration-200">
           <Image
-            src="https://i.ibb.co/5WLNwykj/Gemini-Generated-Image-mfgcowmfgcowmfgc.png"
+            src="/logo.png"
             alt="MindSpace logo"
             width={40}
             height={40}
@@ -45,6 +45,12 @@ export function NavBar({ currentPage }: NavBarProps) {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/appointments"
+            className="hidden md:block rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 shadow-md"
+          >
+            📅 Book Appointment
+          </Link>
           <SignedIn>
             <UserButton
               appearance={{
@@ -92,6 +98,13 @@ export function NavBar({ currentPage }: NavBarProps) {
                 {label}
               </Link>
             ))}
+            <Link
+              href="/appointments"
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-700 text-center"
+              onClick={() => setOpen(false)}
+            >
+              📅 Book Appointment
+            </Link>
           </div>
           <div className="border-t border-gray-700 pt-3 mt-3 space-y-3">
             <SignedIn>
