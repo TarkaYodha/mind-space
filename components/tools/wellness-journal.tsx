@@ -1,22 +1,22 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from "framer-motion"
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/hooks/use-toast'
-import { 
+import { motion } from 'framer-motion'
+import {
   BookOpen,
   Calendar,
   Edit,
-  Trash2,
-  Tag,
-  Plus,
   Filter,
-  Sparkles,
   Heart,
+  Plus,
+  Sparkles,
+  Tag,
   Target,
-  TrendingUp
+  Trash2,
+  TrendingUp,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
 
 interface JournalEntry {
   id: string
@@ -29,21 +29,29 @@ interface JournalEntry {
 }
 
 const journalPrompts = [
-  "What am I grateful for today?",
-  "What was the best part of my day?",
-  "What challenged me today and how did I handle it?",
-  "What did I learn about myself today?",
-  "What are three things I accomplished today?",
-  "How am I feeling right now and why?",
-  "What do I want to remember about today?",
-  "What is one thing I want to improve tomorrow?",
-  "Who made a positive impact on my day?",
-  "What made me smile today?"
+  'What am I grateful for today?',
+  'What was the best part of my day?',
+  'What challenged me today and how did I handle it?',
+  'What did I learn about myself today?',
+  'What are three things I accomplished today?',
+  'How am I feeling right now and why?',
+  'What do I want to remember about today?',
+  'What is one thing I want to improve tomorrow?',
+  'Who made a positive impact on my day?',
+  'What made me smile today?',
 ]
 
 const tagOptions = [
-  'Gratitude', 'Stress', 'Achievement', 'Relationships', 'Learning',
-  'Health', 'Goals', 'Challenges', 'Joy', 'Reflection'
+  'Gratitude',
+  'Stress',
+  'Achievement',
+  'Relationships',
+  'Learning',
+  'Health',
+  'Goals',
+  'Challenges',
+  'Joy',
+  'Reflection',
 ]
 
 export function WellnessJournal() {
@@ -69,9 +77,9 @@ export function WellnessJournal() {
   function saveEntry() {
     if (!currentTitle.trim() || !currentContent.trim()) {
       toast({
-        title: "Missing Information",
-        description: "Please add both a title and content for your entry.",
-        variant: "destructive"
+        title: 'Missing Information',
+        description: 'Please add both a title and content for your entry.',
+        variant: 'destructive',
       })
       return
     }
@@ -82,7 +90,7 @@ export function WellnessJournal() {
       title: currentTitle.trim(),
       content: currentContent.trim(),
       tags: selectedTags,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     const updatedEntries = [newEntry, ...entries]
@@ -96,37 +104,32 @@ export function WellnessJournal() {
     setShowNewEntry(false)
 
     toast({
-      title: "Entry Saved",
-      description: "Your journal entry has been saved securely."
+      title: 'Entry Saved',
+      description: 'Your journal entry has been saved securely.',
     })
   }
 
   function deleteEntry(id: string) {
-    const updatedEntries = entries.filter(entry => entry.id !== id)
+    const updatedEntries = entries.filter((entry) => entry.id !== id)
     setEntries(updatedEntries)
     localStorage.setItem('journal_entries', JSON.stringify(updatedEntries))
-    
+
     toast({
-      title: "Entry Deleted",
-      description: "Your journal entry has been removed."
+      title: 'Entry Deleted',
+      description: 'Your journal entry has been removed.',
     })
   }
 
   function toggleTag(tag: string) {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    )
+    setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
   }
 
   function selectPrompt(prompt: string) {
     setCurrentTitle(prompt)
   }
 
-  const filteredEntries = filter === 'all' 
-    ? entries 
-    : entries.filter(entry => entry.tags.includes(filter))
+  const filteredEntries =
+    filter === 'all' ? entries : entries.filter((entry) => entry.tags.includes(filter))
 
   const recentEntry = entries[0]
   const entryCount = entries.length
@@ -134,21 +137,21 @@ export function WellnessJournal() {
 
   function calculateStreak() {
     if (entries.length === 0) return 0
-    
+
     let streak = 0
     const today = new Date()
-    
+
     for (let i = 0; i < entries.length; i++) {
       const entryDate = new Date(entries[i].date)
       const daysDiff = Math.floor((today.getTime() - entryDate.getTime()) / (1000 * 60 * 60 * 24))
-      
+
       if (daysDiff === streak) {
         streak++
       } else {
         break
       }
     }
-    
+
     return streak
   }
 
@@ -168,7 +171,7 @@ export function WellnessJournal() {
           <div className="text-3xl font-bold text-[#001f4d] mb-1">{entryCount}</div>
           <div className="text-sm font-medium text-slate-600">Total Entries</div>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -181,7 +184,7 @@ export function WellnessJournal() {
           <div className="text-3xl font-bold text-[#001f4d] mb-1">{streakDays}</div>
           <div className="text-sm font-medium text-slate-600">Day Streak</div>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -192,7 +195,12 @@ export function WellnessJournal() {
             <Calendar className="h-6 w-6 text-white" />
           </div>
           <div className="text-2xl font-bold text-[#001f4d] mb-1">
-            {recentEntry ? new Date(recentEntry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'None'}
+            {recentEntry
+              ? new Date(recentEntry.date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : 'None'}
           </div>
           <div className="text-sm font-medium text-slate-600">Last Entry</div>
         </motion.div>
@@ -211,8 +219,8 @@ export function WellnessJournal() {
           </div>
           <h3 className="text-xl font-semibold text-[#001f4d] mb-2">Start Writing</h3>
           <p className="text-slate-600 mb-6">Take a moment to reflect and capture your thoughts</p>
-          <Button 
-            onClick={() => setShowNewEntry(true)} 
+          <Button
+            onClick={() => setShowNewEntry(true)}
             size="lg"
             className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
           >
@@ -235,7 +243,9 @@ export function WellnessJournal() {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-[#001f4d]">New Journal Entry</h2>
-              <p className="text-slate-600">Take a moment to reflect on your thoughts and feelings</p>
+              <p className="text-slate-600">
+                Take a moment to reflect on your thoughts and feelings
+              </p>
             </div>
           </div>
 
@@ -271,9 +281,7 @@ export function WellnessJournal() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <label className="text-sm font-semibold mb-3 block text-slate-700">
-                Entry Title
-              </label>
+              <label className="text-sm font-semibold mb-3 block text-slate-700">Entry Title</label>
               <input
                 type="text"
                 value={currentTitle}
@@ -334,15 +342,15 @@ export function WellnessJournal() {
               transition={{ delay: 0.5 }}
               className="flex gap-3 pt-2"
             >
-              <Button 
-                onClick={saveEntry} 
+              <Button
+                onClick={saveEntry}
                 className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
               >
                 <Heart className="w-4 h-4 mr-2" />
                 Save Entry
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setShowNewEntry(false)
                   setCurrentTitle('')
@@ -384,8 +392,10 @@ export function WellnessJournal() {
                 className="px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#001f4d]/20 focus:border-[#001f4d]"
               >
                 <option value="all">All Entries</option>
-                {tagOptions.map(tag => (
-                  <option key={tag} value={tag}>{tag}</option>
+                {tagOptions.map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
                 ))}
               </select>
             </div>
@@ -405,11 +415,11 @@ export function WellnessJournal() {
                     <h3 className="font-semibold text-slate-800 text-lg mb-1">{entry.title}</h3>
                     <p className="text-sm text-slate-500 flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      {new Date(entry.date).toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
+                      {new Date(entry.date).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
                       })}
                     </p>
                   </div>
@@ -422,9 +432,11 @@ export function WellnessJournal() {
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </div>
-                
-                <p className="text-slate-700 mb-4 whitespace-pre-wrap leading-relaxed">{entry.content}</p>
-                
+
+                <p className="text-slate-700 mb-4 whitespace-pre-wrap leading-relaxed">
+                  {entry.content}
+                </p>
+
                 {entry.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {entry.tags.map((tag, tagIndex) => (

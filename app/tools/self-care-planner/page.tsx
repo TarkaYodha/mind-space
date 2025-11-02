@@ -1,14 +1,25 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-import { CalendarIcon, HeartIcon, BookIcon, MusicIcon, TreesIcon, CoffeeIcon, Users2Icon, ActivityIcon, ArrowLeft, Sparkles } from "lucide-react"
+import { motion } from 'framer-motion'
+import {
+  ActivityIcon,
+  ArrowLeft,
+  BookIcon,
+  CalendarIcon,
+  CoffeeIcon,
+  HeartIcon,
+  MusicIcon,
+  Sparkles,
+  TreesIcon,
+  Users2Icon,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { NavBar } from '@/components/layout/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface SelfCareActivity {
   id: string
@@ -39,7 +50,7 @@ export default function SelfCarePlannerPage() {
       description: 'Practice mindfulness with guided meditation',
       category: 'mindfulness',
       duration: 10,
-      icon: <HeartIcon className="h-5 w-5" />
+      icon: <HeartIcon className="h-5 w-5" />,
     },
     {
       id: 'walk',
@@ -47,15 +58,15 @@ export default function SelfCarePlannerPage() {
       description: 'Take a peaceful walk outdoors',
       category: 'physical',
       duration: 30,
-      icon: <TreesIcon className="h-5 w-5" />
+      icon: <TreesIcon className="h-5 w-5" />,
     },
     {
       id: 'journaling',
       title: 'Gratitude Journaling',
-      description: 'Write down things you\'re grateful for',
+      description: "Write down things you're grateful for",
       category: 'emotional',
       duration: 15,
-      icon: <BookIcon className="h-5 w-5" />
+      icon: <BookIcon className="h-5 w-5" />,
     },
     {
       id: 'music',
@@ -63,7 +74,7 @@ export default function SelfCarePlannerPage() {
       description: 'Enjoy your favorite calming music',
       category: 'creative',
       duration: 20,
-      icon: <MusicIcon className="h-5 w-5" />
+      icon: <MusicIcon className="h-5 w-5" />,
     },
     {
       id: 'tea',
@@ -71,7 +82,7 @@ export default function SelfCarePlannerPage() {
       description: 'Prepare and enjoy tea mindfully',
       category: 'mindfulness',
       duration: 15,
-      icon: <CoffeeIcon className="h-5 w-5" />
+      icon: <CoffeeIcon className="h-5 w-5" />,
     },
     {
       id: 'friends',
@@ -79,7 +90,7 @@ export default function SelfCarePlannerPage() {
       description: 'Reach out to supportive friends',
       category: 'social',
       duration: 45,
-      icon: <Users2Icon className="h-5 w-5" />
+      icon: <Users2Icon className="h-5 w-5" />,
     },
     {
       id: 'exercise',
@@ -87,17 +98,15 @@ export default function SelfCarePlannerPage() {
       description: 'Yoga, stretching, or gentle workout',
       category: 'physical',
       duration: 25,
-      icon: <ActivityIcon className="h-5 w-5" />
+      icon: <ActivityIcon className="h-5 w-5" />,
     },
   ]
 
   const toggleActivityCompletion = (activityId: string) => {
-    setScheduledActivities(prev => 
-      prev.map(activity => 
-        activity.id === activityId 
-          ? { ...activity, completed: !activity.completed }
-          : activity
-      )
+    setScheduledActivities((prev) =>
+      prev.map((activity) =>
+        activity.id === activityId ? { ...activity, completed: !activity.completed } : activity,
+      ),
     )
   }
 
@@ -106,17 +115,17 @@ export default function SelfCarePlannerPage() {
       id: Date.now().toString(),
       activityId,
       date: new Date().toISOString().split('T')[0],
-      completed: false
+      completed: false,
     }
-    setScheduledActivities(prev => [...prev, newScheduledActivity])
+    setScheduledActivities((prev) => [...prev, newScheduledActivity])
   }
 
-  const getActivityById = (id: string) => selfCareActivities.find(a => a.id === id)
+  const getActivityById = (id: string) => selfCareActivities.find((a) => a.id === id)
 
   const todayScheduled = scheduledActivities.filter(
-    activity => activity.date === new Date().toISOString().split('T')[0]
+    (activity) => activity.date === new Date().toISOString().split('T')[0],
   )
-  const completedToday = todayScheduled.filter(activity => activity.completed).length
+  const completedToday = todayScheduled.filter((activity) => activity.completed).length
 
   return (
     <>
@@ -131,11 +140,7 @@ export default function SelfCarePlannerPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-8"
           >
-            <Button
-              variant="ghost"
-              asChild
-              className="mb-4"
-            >
+            <Button variant="ghost" asChild className="mb-4">
               <Link href="/tools">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Tools
@@ -159,11 +164,11 @@ export default function SelfCarePlannerPage() {
               <Badge className="bg-[#001f4d] text-white hover:bg-[#001437]">Wellness Tool</Badge>
             </div>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Plan and schedule personalized self-care activities to nurture your mental health and wellbeing.
-              Small daily actions lead to lasting positive change.
+              Plan and schedule personalized self-care activities to nurture your mental health and
+              wellbeing. Small daily actions lead to lasting positive change.
             </p>
           </motion.div>
-          
+
           {/* Quick Tips */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -180,7 +185,8 @@ export default function SelfCarePlannerPage() {
                   Daily Self-Care Reminder
                 </h3>
                 <p className="text-teal-700">
-                  Schedule at least 15 minutes of self-care each day. Remember, taking care of yourself isn't selfish - it's essential for your wellbeing.
+                  Schedule at least 15 minutes of self-care each day. Remember, taking care of
+                  yourself isn't selfish - it's essential for your wellbeing.
                 </p>
               </div>
             </div>
@@ -208,7 +214,10 @@ export default function SelfCarePlannerPage() {
             <Card className="bg-white border border-slate-100 shadow">
               <CardContent className="pt-6">
                 <div className="text-2xl font-bold text-purple-600 mb-1">
-                  {todayScheduled.length > 0 ? Math.round((completedToday / todayScheduled.length) * 100) : 0}%
+                  {todayScheduled.length > 0
+                    ? Math.round((completedToday / todayScheduled.length) * 100)
+                    : 0}
+                  %
                 </div>
                 <p className="text-sm text-slate-600">Progress</p>
               </CardContent>
@@ -230,22 +239,26 @@ export default function SelfCarePlannerPage() {
                     {todayScheduled.map((scheduled) => {
                       const activity = getActivityById(scheduled.activityId)
                       if (!activity) return null
-                      
+
                       return (
-                        <div 
-                          key={scheduled.id} 
+                        <div
+                          key={scheduled.id}
                           className={`flex items-center justify-between p-4 rounded-xl border transition-all ${
-                            scheduled.completed ? 'bg-green-50 border-green-200' : 'bg-slate-50 border-slate-200'
+                            scheduled.completed
+                              ? 'bg-green-50 border-green-200'
+                              : 'bg-slate-50 border-slate-200'
                           }`}
                         >
                           <div className="flex items-center gap-3">
-                            <Checkbox 
+                            <Checkbox
                               checked={scheduled.completed}
                               onCheckedChange={() => toggleActivityCompletion(scheduled.id)}
                             />
                             <div className="text-slate-700">{activity.icon}</div>
                             <div>
-                              <p className={`font-medium ${scheduled.completed ? 'line-through text-slate-500' : 'text-slate-900'}`}>
+                              <p
+                                className={`font-medium ${scheduled.completed ? 'line-through text-slate-500' : 'text-slate-900'}`}
+                              >
                                 {activity.title}
                               </p>
                               <p className="text-sm text-slate-500">{activity.duration} min</p>
@@ -269,7 +282,10 @@ export default function SelfCarePlannerPage() {
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Self-Care Activities</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {selfCareActivities.map((activity) => (
-                <Card key={activity.id} className="bg-white border border-slate-100 shadow hover:shadow-lg transition-all">
+                <Card
+                  key={activity.id}
+                  className="bg-white border border-slate-100 shadow hover:shadow-lg transition-all"
+                >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-3 mb-3">
                       <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
@@ -281,8 +297,8 @@ export default function SelfCarePlannerPage() {
                         <p className="text-xs text-slate-500">{activity.duration} minutes</p>
                       </div>
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="w-full"
                       onClick={() => scheduleActivity(activity.id)}

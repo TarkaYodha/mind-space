@@ -1,76 +1,101 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Slider } from '@/components/ui/slider';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useToast } from '@/hooks/use-toast';
-import { Sparkles, Calendar, Target, Apple, Flame, Activity, ChefHat, Clock, TrendingUp, Heart, Droplet, Zap, Brain, Moon, UtensilsCrossed, Download, Share2, RefreshCw } from 'lucide-react';
+import {
+  Activity,
+  Apple,
+  Brain,
+  Calendar,
+  ChefHat,
+  Clock,
+  Download,
+  Droplet,
+  Flame,
+  Heart,
+  Moon,
+  RefreshCw,
+  Share2,
+  Sparkles,
+  Target,
+  TrendingUp,
+  UtensilsCrossed,
+  Zap,
+} from 'lucide-react'
+import { useState } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Progress } from '@/components/ui/progress'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
+import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/hooks/use-toast'
 
 interface UserProfile {
-  age: string;
-  gender: string;
-  weight: string;
-  height: string;
-  activityLevel: string;
-  dietaryPreferences: string;
-  goals: string[];
-  allergies: string[];
-  healthConditions: string[];
-  mealsPerDay: number;
-  budget: string;
-  cookingSkill: string;
-  cuisinePreferences: string[];
+  age: string
+  gender: string
+  weight: string
+  height: string
+  activityLevel: string
+  dietaryPreferences: string
+  goals: string[]
+  allergies: string[]
+  healthConditions: string[]
+  mealsPerDay: number
+  budget: string
+  cookingSkill: string
+  cuisinePreferences: string[]
 }
 
 interface NutritionGoals {
-  calories: number;
-  protein: number;
-  carbs: number;
-  fats: number;
-  fiber: number;
-  water: number;
+  calories: number
+  protein: number
+  carbs: number
+  fats: number
+  fiber: number
+  water: number
 }
 
 interface Meal {
-  name: string;
-  time: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fats: number;
-  fiber: number;
-  ingredients: string[];
-  instructions: string[];
-  prepTime: number;
-  tags: string[];
-  benefits: string[];
+  name: string
+  time: string
+  calories: number
+  protein: number
+  carbs: number
+  fats: number
+  fiber: number
+  ingredients: string[]
+  instructions: string[]
+  prepTime: number
+  tags: string[]
+  benefits: string[]
 }
 
 interface DietPlan {
-  day: string;
-  meals: Meal[];
+  day: string
+  meals: Meal[]
   totalNutrition: {
-    calories: number;
-    protein: number;
-    carbs: number;
-    fats: number;
-    fiber: number;
-  };
-  tips: string[];
-  hydrationReminders: string[];
+    calories: number
+    protein: number
+    carbs: number
+    fats: number
+    fiber: number
+  }
+  tips: string[]
+  hydrationReminders: string[]
 }
 
 export function DietPlannerInterface() {
-  const [step, setStep] = useState(1);
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [step, setStep] = useState(1)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [profile, setProfile] = useState<UserProfile>({
     age: '',
     gender: '',
@@ -85,24 +110,24 @@ export function DietPlannerInterface() {
     budget: 'moderate',
     cookingSkill: 'intermediate',
     cuisinePreferences: [],
-  });
-  const [nutritionGoals, setNutritionGoals] = useState<NutritionGoals | null>(null);
-  const [weeklyPlan, setWeeklyPlan] = useState<DietPlan[]>([]);
-  const [selectedDay, setSelectedDay] = useState(0);
-  const [generationProgress, setGenerationProgress] = useState(0);
-  const { toast } = useToast();
+  })
+  const [nutritionGoals, setNutritionGoals] = useState<NutritionGoals | null>(null)
+  const [weeklyPlan, setWeeklyPlan] = useState<DietPlan[]>([])
+  const [selectedDay, setSelectedDay] = useState(0)
+  const [generationProgress, setGenerationProgress] = useState(0)
+  const { toast } = useToast()
 
   const calculateNutritionGoals = (): NutritionGoals => {
     // Harris-Benedict Equation for BMR
-    const weight = parseFloat(profile.weight);
-    const height = parseFloat(profile.height);
-    const age = parseFloat(profile.age);
-    
-    let bmr = 0;
+    const weight = parseFloat(profile.weight)
+    const height = parseFloat(profile.height)
+    const age = parseFloat(profile.age)
+
+    let bmr = 0
     if (profile.gender === 'male') {
-      bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+      bmr = 88.362 + 13.397 * weight + 4.799 * height - 5.677 * age
     } else {
-      bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+      bmr = 447.593 + 9.247 * weight + 3.098 * height - 4.33 * age
     }
 
     // Activity multiplier
@@ -112,21 +137,21 @@ export function DietPlannerInterface() {
       moderate: 1.55,
       active: 1.725,
       'very-active': 1.9,
-    };
+    }
 
-    let tdee = bmr * (activityMultipliers[profile.activityLevel] || 1.5);
+    let tdee = bmr * (activityMultipliers[profile.activityLevel] || 1.5)
 
     // Adjust for goals
     if (profile.goals.includes('weight-loss')) {
-      tdee -= 500; // 500 calorie deficit
+      tdee -= 500 // 500 calorie deficit
     } else if (profile.goals.includes('muscle-gain')) {
-      tdee += 300; // 300 calorie surplus
+      tdee += 300 // 300 calorie surplus
     }
 
     // Macronutrient distribution
-    const proteinRatio = profile.goals.includes('muscle-gain') ? 0.30 : 0.25;
-    const fatRatio = 0.25;
-    const carbRatio = 1 - proteinRatio - fatRatio;
+    const proteinRatio = profile.goals.includes('muscle-gain') ? 0.3 : 0.25
+    const fatRatio = 0.25
+    const carbRatio = 1 - proteinRatio - fatRatio
 
     return {
       calories: Math.round(tdee),
@@ -135,31 +160,31 @@ export function DietPlannerInterface() {
       fats: Math.round((tdee * fatRatio) / 9),
       fiber: 30,
       water: Math.round(weight * 0.033 * 1000), // ml
-    };
-  };
+    }
+  }
 
   const generateAIDietPlan = async () => {
-    setIsGenerating(true);
+    setIsGenerating(true)
 
     try {
       // Calculate nutrition goals
-      const goals = calculateNutritionGoals();
-      setNutritionGoals(goals);
+      const goals = calculateNutritionGoals()
+      setNutritionGoals(goals)
 
       // Show loading message
       toast({
         title: '🤖 AI is crafting your meal plan...',
         description: 'This may take 30-60 seconds. Creating personalized recipes just for you!',
-      });
+      })
 
       // Generate meal plans for each day of the week using Google Gemini AI
-      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-      const weekPlan: DietPlan[] = [];
+      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+      const weekPlan: DietPlan[] = []
 
       for (let i = 0; i < days.length; i++) {
-        const day = days[i];
-        setGenerationProgress(Math.round(((i + 1) / days.length) * 100));
-        
+        const day = days[i]
+        setGenerationProgress(Math.round(((i + 1) / days.length) * 100))
+
         try {
           const response = await fetch('/api/diet-plan', {
             method: 'POST',
@@ -176,14 +201,14 @@ export function DietPlannerInterface() {
               },
               dayOfWeek: day,
             }),
-          });
+          })
 
           if (!response.ok) {
-            throw new Error(`Failed to generate ${day} plan`);
+            throw new Error(`Failed to generate ${day} plan`)
           }
 
-          const data = await response.json();
-          
+          const data = await response.json()
+
           if (data.success && data.mealPlan) {
             // Calculate total nutrition from AI-generated meals
             const totalNutrition = data.mealPlan.meals.reduce(
@@ -195,8 +220,8 @@ export function DietPlannerInterface() {
                 fats: acc.fats + meal.fats,
                 fiber: acc.fiber + meal.fiber,
               }),
-              { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 }
-            );
+              { calories: 0, protein: 0, carbs: 0, fats: 0, fiber: 0 },
+            )
 
             weekPlan.push({
               day,
@@ -210,44 +235,44 @@ export function DietPlannerInterface() {
                 '6:00 PM - Pre-dinner water',
                 '9:00 PM - Evening hydration',
               ],
-            });
+            })
           } else {
             // Fallback to pre-programmed meals if AI fails for this day
-            console.warn(`AI generation failed for ${day}, using fallback`);
-            const fallbackPlan = generateWeeklyMeals(goals)[0];
-            weekPlan.push({ ...fallbackPlan, day });
+            console.warn(`AI generation failed for ${day}, using fallback`)
+            const fallbackPlan = generateWeeklyMeals(goals)[0]
+            weekPlan.push({ ...fallbackPlan, day })
           }
         } catch (dayError) {
-          console.error(`Error generating ${day}:`, dayError);
+          console.error(`Error generating ${day}:`, dayError)
           // Fallback to pre-programmed meals for this day
-          const fallbackPlan = generateWeeklyMeals(goals)[0];
-          weekPlan.push({ ...fallbackPlan, day });
+          const fallbackPlan = generateWeeklyMeals(goals)[0]
+          weekPlan.push({ ...fallbackPlan, day })
         }
       }
 
-      setWeeklyPlan(weekPlan);
+      setWeeklyPlan(weekPlan)
 
       toast({
         title: '🎉 Your AI Diet Plan is Ready!',
         description: 'Personalized nutrition plan generated by AI based on your unique profile.',
-      });
+      })
 
-      setStep(3);
+      setStep(3)
     } catch (error) {
-      console.error('Diet plan generation error:', error);
+      console.error('Diet plan generation error:', error)
       toast({
         title: 'Generation Failed',
         description: 'Please try again or adjust your preferences.',
         variant: 'destructive',
-      });
+      })
     } finally {
-      setIsGenerating(false);
+      setIsGenerating(false)
     }
-  };
+  }
 
   const generateWeeklyMeals = (goals: NutritionGoals): DietPlan[] => {
-    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-    
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
     return days.map((day) => ({
       day,
       meals: generateDayMeals(goals),
@@ -266,41 +291,49 @@ export function DietPlannerInterface() {
         '6:00 PM - Pre-dinner water',
         '9:00 PM - Evening hydration',
       ],
-    }));
-  };
+    }))
+  }
 
   const generateDayMeals = (goals: NutritionGoals): Meal[] => {
-    const caloriesPerMeal = goals.calories / profile.mealsPerDay;
-    const proteinPerMeal = goals.protein / profile.mealsPerDay;
-    const carbsPerMeal = goals.carbs / profile.mealsPerDay;
-    const fatsPerMeal = goals.fats / profile.mealsPerDay;
+    const caloriesPerMeal = goals.calories / profile.mealsPerDay
+    const proteinPerMeal = goals.protein / profile.mealsPerDay
+    const carbsPerMeal = goals.carbs / profile.mealsPerDay
+    const fatsPerMeal = goals.fats / profile.mealsPerDay
 
-    const mealDatabase = getMealDatabase(profile);
-    const meals: Meal[] = [];
+    const mealDatabase = getMealDatabase(profile)
+    const meals: Meal[] = []
 
-    const mealTimes = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Evening Snack'];
-    
+    const mealTimes = [
+      'Breakfast',
+      'Morning Snack',
+      'Lunch',
+      'Afternoon Snack',
+      'Dinner',
+      'Evening Snack',
+    ]
+
     for (let i = 0; i < profile.mealsPerDay; i++) {
-      const mealType = mealTimes[i] || `Meal ${i + 1}`;
-      const mealOptions = mealDatabase[mealType as keyof typeof mealDatabase] || mealDatabase['Lunch'];
-      const selectedMeal = mealOptions[Math.floor(Math.random() * mealOptions.length)];
-      
+      const mealType = mealTimes[i] || `Meal ${i + 1}`
+      const mealOptions =
+        mealDatabase[mealType as keyof typeof mealDatabase] || mealDatabase['Lunch']
+      const selectedMeal = mealOptions[Math.floor(Math.random() * mealOptions.length)]
+
       meals.push({
         ...selectedMeal,
         calories: Math.round(caloriesPerMeal * (selectedMeal.calories / 100)),
         protein: Math.round(proteinPerMeal * (selectedMeal.protein / 100)),
         carbs: Math.round(carbsPerMeal * (selectedMeal.carbs / 100)),
         fats: Math.round(fatsPerMeal * (selectedMeal.fats / 100)),
-      });
+      })
     }
 
-    return meals;
-  };
+    return meals
+  }
 
   const getMealDatabase = (profile: UserProfile) => {
-    const isVegetarian = profile.dietaryPreferences === 'vegetarian';
-    const isVegan = profile.dietaryPreferences === 'vegan';
-    const isKeto = profile.dietaryPreferences === 'keto';
+    const isVegetarian = profile.dietaryPreferences === 'vegetarian'
+    const isVegan = profile.dietaryPreferences === 'vegan'
+    const isKeto = profile.dietaryPreferences === 'keto'
 
     return {
       Breakfast: [
@@ -312,9 +345,24 @@ export function DietPlannerInterface() {
           carbs: 100,
           fats: 100,
           fiber: 8,
-          ingredients: isVegan 
-            ? ['Banana', 'Mixed berries', 'Almond milk', 'Chia seeds', 'Hemp protein', 'Granola', 'Almond butter']
-            : ['Greek yogurt (200g)', 'Mixed berries (100g)', 'Granola (30g)', 'Honey (1 tbsp)', 'Almonds (15g)', 'Chia seeds'],
+          ingredients: isVegan
+            ? [
+                'Banana',
+                'Mixed berries',
+                'Almond milk',
+                'Chia seeds',
+                'Hemp protein',
+                'Granola',
+                'Almond butter',
+              ]
+            : [
+                'Greek yogurt (200g)',
+                'Mixed berries (100g)',
+                'Granola (30g)',
+                'Honey (1 tbsp)',
+                'Almonds (15g)',
+                'Chia seeds',
+              ],
           instructions: [
             'Blend frozen banana with almond milk and protein powder',
             'Pour into bowl and top with fresh berries',
@@ -339,8 +387,24 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 10,
           ingredients: isKeto
-            ? ['Avocado', 'Eggs (2)', 'Bacon (2 slices)', 'Cherry tomatoes', 'Feta cheese', 'Olive oil', 'Spinach']
-            : ['Rolled oats (50g)', 'Almond milk (200ml)', 'Banana', 'Walnuts (20g)', 'Cinnamon', 'Maple syrup', 'Blueberries'],
+            ? [
+                'Avocado',
+                'Eggs (2)',
+                'Bacon (2 slices)',
+                'Cherry tomatoes',
+                'Feta cheese',
+                'Olive oil',
+                'Spinach',
+              ]
+            : [
+                'Rolled oats (50g)',
+                'Almond milk (200ml)',
+                'Banana',
+                'Walnuts (20g)',
+                'Cinnamon',
+                'Maple syrup',
+                'Blueberries',
+              ],
           instructions: [
             'Prepare the night before by mixing oats with almond milk',
             'Add cinnamon and maple syrup',
@@ -364,7 +428,15 @@ export function DietPlannerInterface() {
           carbs: 100,
           fats: 100,
           fiber: 6,
-          ingredients: ['Banana', 'Eggs (2)', 'Protein powder (30g)', 'Oats (40g)', 'Blueberries', 'Maple syrup', 'Greek yogurt'],
+          ingredients: [
+            'Banana',
+            'Eggs (2)',
+            'Protein powder (30g)',
+            'Oats (40g)',
+            'Blueberries',
+            'Maple syrup',
+            'Greek yogurt',
+          ],
           instructions: [
             'Blend banana, eggs, protein powder, and oats',
             'Cook on non-stick pan until golden',
@@ -441,8 +513,25 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 12,
           ingredients: isVegan
-            ? ['Quinoa (80g)', 'Chickpeas (150g)', 'Sweet potato', 'Kale', 'Avocado', 'Tahini', 'Lemon', 'Pumpkin seeds']
-            : ['Grilled chicken breast (150g)', 'Quinoa (80g)', 'Roasted vegetables', 'Avocado (1/2)', 'Feta cheese', 'Olive oil', 'Lemon'],
+            ? [
+                'Quinoa (80g)',
+                'Chickpeas (150g)',
+                'Sweet potato',
+                'Kale',
+                'Avocado',
+                'Tahini',
+                'Lemon',
+                'Pumpkin seeds',
+              ]
+            : [
+                'Grilled chicken breast (150g)',
+                'Quinoa (80g)',
+                'Roasted vegetables',
+                'Avocado (1/2)',
+                'Feta cheese',
+                'Olive oil',
+                'Lemon',
+              ],
           instructions: [
             'Cook quinoa according to package directions',
             'Grill chicken breast with herbs and spices',
@@ -467,7 +556,15 @@ export function DietPlannerInterface() {
           carbs: 100,
           fats: 100,
           fiber: 8,
-          ingredients: ['Salmon fillet (150g)', 'Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Walnuts', 'Balsamic vinaigrette'],
+          ingredients: [
+            'Salmon fillet (150g)',
+            'Mixed greens',
+            'Cherry tomatoes',
+            'Cucumber',
+            'Red onion',
+            'Walnuts',
+            'Balsamic vinaigrette',
+          ],
           instructions: [
             'Bake or pan-sear salmon with lemon and herbs',
             'Prepare salad with mixed greens, tomatoes, cucumber',
@@ -492,8 +589,25 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 14,
           ingredients: isVegetarian
-            ? ['Red lentils (100g)', 'Brown rice (80g)', 'Coconut milk', 'Curry spices', 'Spinach', 'Tomatoes', 'Onion', 'Garlic']
-            : ['Ground turkey (150g)', 'Sweet potato', 'Broccoli', 'Brown rice', 'Garlic', 'Ginger', 'Soy sauce'],
+            ? [
+                'Red lentils (100g)',
+                'Brown rice (80g)',
+                'Coconut milk',
+                'Curry spices',
+                'Spinach',
+                'Tomatoes',
+                'Onion',
+                'Garlic',
+              ]
+            : [
+                'Ground turkey (150g)',
+                'Sweet potato',
+                'Broccoli',
+                'Brown rice',
+                'Garlic',
+                'Ginger',
+                'Soy sauce',
+              ],
           instructions: [
             'Cook lentils with curry spices, coconut milk, and vegetables',
             'Prepare brown rice',
@@ -520,10 +634,7 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 3,
           ingredients: ['Almonds (15g)', 'Walnuts (15g)', 'Dark chocolate 70% (20g)'],
-          instructions: [
-            'Portion nuts and dark chocolate',
-            'Enjoy as an afternoon energy boost',
-          ],
+          instructions: ['Portion nuts and dark chocolate', 'Enjoy as an afternoon energy boost'],
           prepTime: 2,
           tags: ['Energy-Boosting', 'Antioxidant-Rich', 'Brain Food'],
           benefits: [
@@ -569,8 +680,26 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 10,
           ingredients: isVegan
-            ? ['Firm tofu (200g)', 'Broccoli', 'Bell peppers', 'Snap peas', 'Brown rice', 'Soy sauce', 'Ginger', 'Garlic', 'Sesame oil']
-            : ['Grass-fed steak (180g)', 'Sweet potato', 'Asparagus', 'Brussels sprouts', 'Olive oil', 'Rosemary', 'Garlic'],
+            ? [
+                'Firm tofu (200g)',
+                'Broccoli',
+                'Bell peppers',
+                'Snap peas',
+                'Brown rice',
+                'Soy sauce',
+                'Ginger',
+                'Garlic',
+                'Sesame oil',
+              ]
+            : [
+                'Grass-fed steak (180g)',
+                'Sweet potato',
+                'Asparagus',
+                'Brussels sprouts',
+                'Olive oil',
+                'Rosemary',
+                'Garlic',
+              ],
           instructions: [
             'Season steak with salt, pepper, and rosemary',
             'Grill to desired doneness (medium-rare recommended)',
@@ -595,7 +724,16 @@ export function DietPlannerInterface() {
           carbs: 100,
           fats: 100,
           fiber: 9,
-          ingredients: ['Cod fillet (180g)', 'Quinoa (80g)', 'Kale', 'Lemon', 'Garlic', 'Cherry tomatoes', 'Olive oil', 'Herbs'],
+          ingredients: [
+            'Cod fillet (180g)',
+            'Quinoa (80g)',
+            'Kale',
+            'Lemon',
+            'Garlic',
+            'Cherry tomatoes',
+            'Olive oil',
+            'Herbs',
+          ],
           instructions: [
             'Bake cod with lemon, garlic, and herbs at 400°F for 15 minutes',
             'Cook quinoa according to package',
@@ -620,8 +758,25 @@ export function DietPlannerInterface() {
           fats: 100,
           fiber: 11,
           ingredients: isVegetarian
-            ? ['Whole wheat lasagna noodles', 'Ricotta cheese', 'Spinach', 'Zucchini', 'Mushrooms', 'Marinara sauce', 'Mozzarella']
-            : ['Chicken breast', 'Bell peppers', 'Onions', 'Cauliflower rice', 'Black beans', 'Avocado', 'Salsa', 'Greek yogurt'],
+            ? [
+                'Whole wheat lasagna noodles',
+                'Ricotta cheese',
+                'Spinach',
+                'Zucchini',
+                'Mushrooms',
+                'Marinara sauce',
+                'Mozzarella',
+              ]
+            : [
+                'Chicken breast',
+                'Bell peppers',
+                'Onions',
+                'Cauliflower rice',
+                'Black beans',
+                'Avocado',
+                'Salsa',
+                'Greek yogurt',
+              ],
           instructions: [
             'Sauté chicken with fajita seasonings',
             'Cook bell peppers and onions until tender',
@@ -648,7 +803,12 @@ export function DietPlannerInterface() {
           carbs: 100,
           fats: 100,
           fiber: 2,
-          ingredients: ['Chamomile tea', 'Rice cakes (2)', 'Almond butter (1 tbsp)', 'Banana slices'],
+          ingredients: [
+            'Chamomile tea',
+            'Rice cakes (2)',
+            'Almond butter (1 tbsp)',
+            'Banana slices',
+          ],
           instructions: [
             'Brew chamomile tea',
             'Spread almond butter on rice cakes',
@@ -660,13 +820,13 @@ export function DietPlannerInterface() {
           benefits: [
             'Promotes relaxation',
             'Light and easy to digest',
-            'Won\'t disrupt sleep',
+            "Won't disrupt sleep",
             'Tryptophan from banana aids sleep',
           ],
         },
       ],
-    };
-  };
+    }
+  }
 
   const generateDailyTips = (): string[] => {
     const allTips = [
@@ -680,10 +840,10 @@ export function DietPlannerInterface() {
       '💪 Protein at each meal helps maintain muscle mass',
       '🧘 Manage stress - it affects eating habits and digestion',
       '📱 Meal prep on Sundays to set yourself up for success',
-    ];
+    ]
 
-    return allTips.slice(0, 5);
-  };
+    return allTips.slice(0, 5)
+  }
 
   const handleGoalToggle = (goal: string) => {
     setProfile((prev) => ({
@@ -691,8 +851,8 @@ export function DietPlannerInterface() {
       goals: prev.goals.includes(goal)
         ? prev.goals.filter((g) => g !== goal)
         : [...prev.goals, goal],
-    }));
-  };
+    }))
+  }
 
   const handleCuisineToggle = (cuisine: string) => {
     setProfile((prev) => ({
@@ -700,8 +860,8 @@ export function DietPlannerInterface() {
       cuisinePreferences: prev.cuisinePreferences.includes(cuisine)
         ? prev.cuisinePreferences.filter((c) => c !== cuisine)
         : [...prev.cuisinePreferences, cuisine],
-    }));
-  };
+    }))
+  }
 
   const renderStep1 = () => (
     <div className="space-y-6">
@@ -719,7 +879,10 @@ export function DietPlannerInterface() {
 
         <div className="space-y-2">
           <Label htmlFor="gender">Gender</Label>
-          <Select value={profile.gender} onValueChange={(value) => setProfile({ ...profile, gender: value })}>
+          <Select
+            value={profile.gender}
+            onValueChange={(value) => setProfile({ ...profile, gender: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select gender" />
             </SelectTrigger>
@@ -755,7 +918,10 @@ export function DietPlannerInterface() {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="activityLevel">Activity Level</Label>
-          <Select value={profile.activityLevel} onValueChange={(value) => setProfile({ ...profile, activityLevel: value })}>
+          <Select
+            value={profile.activityLevel}
+            onValueChange={(value) => setProfile({ ...profile, activityLevel: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select activity level" />
             </SelectTrigger>
@@ -771,7 +937,10 @@ export function DietPlannerInterface() {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="dietaryPreferences">Dietary Preference</Label>
-          <Select value={profile.dietaryPreferences} onValueChange={(value) => setProfile({ ...profile, dietaryPreferences: value })}>
+          <Select
+            value={profile.dietaryPreferences}
+            onValueChange={(value) => setProfile({ ...profile, dietaryPreferences: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select dietary preference" />
             </SelectTrigger>
@@ -816,11 +985,15 @@ export function DietPlannerInterface() {
         </div>
       </div>
 
-      <Button onClick={() => setStep(2)} className="w-full" disabled={!profile.age || !profile.weight || !profile.height || !profile.activityLevel}>
+      <Button
+        onClick={() => setStep(2)}
+        className="w-full"
+        disabled={!profile.age || !profile.weight || !profile.height || !profile.activityLevel}
+      >
         Continue to Preferences
       </Button>
     </div>
-  );
+  )
 
   const renderStep2 = () => (
     <div className="space-y-6">
@@ -842,7 +1015,10 @@ export function DietPlannerInterface() {
 
         <div className="space-y-2">
           <Label htmlFor="budget">Budget</Label>
-          <Select value={profile.budget} onValueChange={(value) => setProfile({ ...profile, budget: value })}>
+          <Select
+            value={profile.budget}
+            onValueChange={(value) => setProfile({ ...profile, budget: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select budget" />
             </SelectTrigger>
@@ -856,7 +1032,10 @@ export function DietPlannerInterface() {
 
         <div className="space-y-2">
           <Label htmlFor="cookingSkill">Cooking Skill Level</Label>
-          <Select value={profile.cookingSkill} onValueChange={(value) => setProfile({ ...profile, cookingSkill: value })}>
+          <Select
+            value={profile.cookingSkill}
+            onValueChange={(value) => setProfile({ ...profile, cookingSkill: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select skill level" />
             </SelectTrigger>
@@ -906,7 +1085,12 @@ export function DietPlannerInterface() {
       </div>
 
       <div className="flex gap-3">
-        <Button variant="outline" onClick={() => setStep(1)} className="flex-1" disabled={isGenerating}>
+        <Button
+          variant="outline"
+          onClick={() => setStep(1)}
+          className="flex-1"
+          disabled={isGenerating}
+        >
           Back
         </Button>
         <Button onClick={generateAIDietPlan} className="flex-1" disabled={isGenerating}>
@@ -924,11 +1108,11 @@ export function DietPlannerInterface() {
         </Button>
       </div>
     </div>
-  );
+  )
 
   const renderStep3 = () => {
-    const currentPlan = weeklyPlan[selectedDay];
-    if (!currentPlan) return null;
+    const currentPlan = weeklyPlan[selectedDay]
+    if (!currentPlan) return null
 
     return (
       <div className="space-y-6">
@@ -969,7 +1153,9 @@ export function DietPlannerInterface() {
                       <Droplet className="h-4 w-4 text-cyan-500" />
                       Water
                     </span>
-                    <span className="text-2xl font-bold">{(nutritionGoals.water / 1000).toFixed(1)}L</span>
+                    <span className="text-2xl font-bold">
+                      {(nutritionGoals.water / 1000).toFixed(1)}L
+                    </span>
                   </div>
                   <Progress value={100} className="h-2" />
                 </div>
@@ -1013,7 +1199,7 @@ export function DietPlannerInterface() {
             <ChefHat className="h-5 w-5" />
             {currentPlan.day}'s Meal Plan
           </h3>
-          
+
           {currentPlan.meals.map((meal, index) => (
             <Card key={index} className="overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5">
@@ -1174,14 +1360,21 @@ export function DietPlannerInterface() {
             <Share2 className="h-4 w-4 mr-2" />
             Share Plan
           </Button>
-          <Button variant="outline" className="flex-1" onClick={() => { setStep(1); setWeeklyPlan([]); }}>
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={() => {
+              setStep(1)
+              setWeeklyPlan([])
+            }}
+          >
             <RefreshCw className="h-4 w-4 mr-2" />
             New Plan
           </Button>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
@@ -1237,7 +1430,9 @@ export function DietPlannerInterface() {
                 </div>
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">AI is Crafting Your Personalized Meal Plan</h3>
+                <h3 className="text-xl font-semibold">
+                  AI is Crafting Your Personalized Meal Plan
+                </h3>
                 <p className="text-muted-foreground">
                   Google Gemini 1.5 Flash is analyzing your profile and creating unique recipes...
                 </p>
@@ -1245,7 +1440,8 @@ export function DietPlannerInterface() {
               <div className="max-w-md mx-auto space-y-2">
                 <Progress value={generationProgress} className="h-3" />
                 <p className="text-sm text-muted-foreground">
-                  {generationProgress}% Complete - Generating day {Math.ceil(generationProgress / 14.3)} of 7
+                  {generationProgress}% Complete - Generating day{' '}
+                  {Math.ceil(generationProgress / 14.3)} of 7
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto mt-8">
@@ -1287,7 +1483,8 @@ export function DietPlannerInterface() {
               </CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Google Gemini 1.5 Flash analyzes your profile to create truly personalized meal plans with unique recipes
+              Google Gemini 1.5 Flash analyzes your profile to create truly personalized meal plans
+              with unique recipes
             </CardContent>
           </Card>
           <Card>
@@ -1315,5 +1512,5 @@ export function DietPlannerInterface() {
         </div>
       )}
     </div>
-  );
+  )
 }

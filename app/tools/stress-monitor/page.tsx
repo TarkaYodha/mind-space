@@ -1,24 +1,19 @@
-"use client"
+'use client'
 
+import { motion } from 'framer-motion'
+import { Activity, ArrowLeft, Menu, Shield, X } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 import { useState } from 'react'
-import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { useAuth } from '@clerk/nextjs'
-import { StressMonitor } from "@/components/tools/stress-monitor"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import {
-  Activity,
-  Menu,
-  X,
-  ArrowLeft,
-  Shield
-} from "lucide-react"
+import { StressMonitor } from '@/components/tools/stress-monitor'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 export default function StressMonitorPage() {
   const [open, setOpen] = useState(false)
-  const { isSignedIn } = useAuth()
+  const { data: session } = useSession()
+  const isSignedIn = !!session
 
   return (
     <>
@@ -37,23 +32,56 @@ export default function StressMonitorPage() {
           </div>
 
           <div className="hidden sm:flex items-center space-x-8">
-            <Link href="/" style={{color: 'white'}} className="hover:text-gray-300">Home</Link>
-            <Link href="/activities" style={{color: 'white'}} className="hover:text-gray-300">Activities</Link>
-            <Link href="/chat" style={{color: 'white'}} className="hover:text-gray-300">AI Chat</Link>
-            <Link href="/dashboard" style={{color: 'white'}} className="hover:text-gray-300">Dashboard</Link>
-            <Link href="/assessments" style={{color: 'white'}} className="hover:text-gray-300">Assessments</Link>
-            <Link href="/tools" className="font-semibold bg-gray-800 px-3 py-1 rounded-lg text-white hover:text-gray-300">Tools</Link>
-            <a href="#" style={{color: 'white'}} className="hover:text-gray-300">Reference</a>
+            <Link href="/" style={{ color: 'white' }} className="hover:text-gray-300">
+              Home
+            </Link>
+            <Link href="/activities" style={{ color: 'white' }} className="hover:text-gray-300">
+              Activities
+            </Link>
+            <Link href="/chat" style={{ color: 'white' }} className="hover:text-gray-300">
+              AI Chat
+            </Link>
+            <Link href="/dashboard" style={{ color: 'white' }} className="hover:text-gray-300">
+              Dashboard
+            </Link>
+            <Link href="/assessments" style={{ color: 'white' }} className="hover:text-gray-300">
+              Assessments
+            </Link>
+            <Link
+              href="/tools"
+              className="font-semibold bg-gray-800 px-3 py-1 rounded-lg text-white hover:text-gray-300"
+            >
+              Tools
+            </Link>
+            <a href="#" style={{ color: 'white' }} className="hover:text-gray-300">
+              Reference
+            </a>
 
-            <Link 
-              href={isSignedIn ? "/chat" : "/sign-in"} 
-              style={{backgroundColor: '#001f4d', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '8px'}} 
+            <Link
+              href={isSignedIn ? '/chat' : '/sign-in'}
+              style={{
+                backgroundColor: '#001f4d',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '8px',
+              }}
               className="hover:bg-[#001437] transition-colors duration-200"
             >
               Start Free Chat
             </Link>
-            <svg className="w-6 h-6 text-gray-300 hover:text-white cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-5 5-5-5h5v-12"></path>
+            <svg
+              className="w-6 h-6 text-gray-300 hover:text-white cursor-pointer"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 17h5l-5 5-5-5h5v-12"
+              ></path>
             </svg>
             <Image
               src="https://cdn-icons-png.flaticon.com/128/12225/12225881.png"
@@ -64,10 +92,7 @@ export default function StressMonitorPage() {
             />
           </div>
 
-          <button
-            className="sm:hidden text-white"
-            onClick={() => setOpen(!open)}
-          >
+          <button className="sm:hidden text-white" onClick={() => setOpen(!open)}>
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -75,13 +100,30 @@ export default function StressMonitorPage() {
         {open && (
           <div className="sm:hidden absolute top-full left-0 w-full bg-[#0F172A] shadow-lg px-6 py-4 space-y-4">
             <div className="flex flex-col space-y-3">
-              <Link href="/" style={{color: 'white'}} className="hover:text-gray-300">Home</Link>
-              <Link href="/activities" style={{color: 'white'}} className="hover:text-gray-300">Activities</Link>
-              <Link href="/chat" style={{color: 'white'}} className="hover:text-gray-300">AI Chat</Link>
-              <Link href="/dashboard" style={{color: 'white'}} className="hover:text-gray-300">Dashboard</Link>
-              <Link href="/assessments" style={{color: 'white'}} className="hover:text-gray-300">Assessments</Link>
-              <Link href="/tools" className="font-semibold bg-gray-800 px-3 py-1 rounded-lg text-white hover:text-gray-300">Tools</Link>
-              <a href="#" style={{color: 'white'}} className="hover:text-gray-300">Reference</a>
+              <Link href="/" style={{ color: 'white' }} className="hover:text-gray-300">
+                Home
+              </Link>
+              <Link href="/activities" style={{ color: 'white' }} className="hover:text-gray-300">
+                Activities
+              </Link>
+              <Link href="/chat" style={{ color: 'white' }} className="hover:text-gray-300">
+                AI Chat
+              </Link>
+              <Link href="/dashboard" style={{ color: 'white' }} className="hover:text-gray-300">
+                Dashboard
+              </Link>
+              <Link href="/assessments" style={{ color: 'white' }} className="hover:text-gray-300">
+                Assessments
+              </Link>
+              <Link
+                href="/tools"
+                className="font-semibold bg-gray-800 px-3 py-1 rounded-lg text-white hover:text-gray-300"
+              >
+                Tools
+              </Link>
+              <a href="#" style={{ color: 'white' }} className="hover:text-gray-300">
+                Reference
+              </a>
             </div>
           </div>
         )}
@@ -96,11 +138,7 @@ export default function StressMonitorPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-8"
           >
-            <Button
-              variant="ghost"
-              asChild
-              className="mb-4"
-            >
+            <Button variant="ghost" asChild className="mb-4">
               <Link href="/tools">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Tools
@@ -124,11 +162,12 @@ export default function StressMonitorPage() {
               <Badge className="bg-[#001f4d] text-white hover:bg-[#001437]">Check-in Tool</Badge>
             </div>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Regular check-ins to monitor and manage your stress levels with personalized recommendations.
-              Understanding your stress patterns helps you take proactive steps toward better wellness.
+              Regular check-ins to monitor and manage your stress levels with personalized
+              recommendations. Understanding your stress patterns helps you take proactive steps
+              toward better wellness.
             </p>
           </motion.div>
-          
+
           {/* Quick Tips */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -141,17 +180,16 @@ export default function StressMonitorPage() {
                 <Shield className="h-6 w-6 text-amber-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-amber-800 mb-2">
-                  Stress Management Tip
-                </h3>
+                <h3 className="text-lg font-semibold text-amber-800 mb-2">Stress Management Tip</h3>
                 <p className="text-amber-700">
-                  Regular monitoring helps you catch stress early and develop effective coping strategies. 
-                  Be honest about your stress levels - there's no judgment here, only support.
+                  Regular monitoring helps you catch stress early and develop effective coping
+                  strategies. Be honest about your stress levels - there's no judgment here, only
+                  support.
                 </p>
               </div>
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}

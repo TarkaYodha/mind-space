@@ -1,18 +1,10 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from "framer-motion"
+import { motion } from 'framer-motion'
+import { BarChart, Calendar, Eye, EyeOff, Heart, Sparkles, TrendingUp } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
-import { 
-  BarChart, 
-  Calendar, 
-  TrendingUp, 
-  Eye, 
-  EyeOff,
-  Sparkles,
-  Heart
-} from 'lucide-react'
 
 interface MoodEntry {
   date: string
@@ -26,7 +18,7 @@ const moodEmojis = [
   { value: 2, emoji: '😞', label: 'Bad' },
   { value: 3, emoji: '😐', label: 'Okay' },
   { value: 4, emoji: '🙂', label: 'Good' },
-  { value: 5, emoji: '😊', label: 'Great' }
+  { value: 5, emoji: '😊', label: 'Great' },
 ]
 
 export function MoodTracker() {
@@ -54,7 +46,7 @@ export function MoodTracker() {
       date: new Date().toISOString().split('T')[0],
       mood: selectedMood,
       notes: notes.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     const updatedHistory = [...moodHistory, newEntry]
@@ -63,17 +55,18 @@ export function MoodTracker() {
 
     setSelectedMood(null)
     setNotes('')
-    
+
     toast({
-      title: "Mood Logged",
-      description: "Your mood has been saved successfully!"
+      title: 'Mood Logged',
+      description: 'Your mood has been saved successfully!',
     })
   }
 
   const recentEntries = moodHistory.slice(-7).reverse()
-  const averageMood = moodHistory.length > 0 
-    ? (moodHistory.reduce((sum, entry) => sum + entry.mood, 0) / moodHistory.length).toFixed(1)
-    : null
+  const averageMood =
+    moodHistory.length > 0
+      ? (moodHistory.reduce((sum, entry) => sum + entry.mood, 0) / moodHistory.length).toFixed(1)
+      : null
 
   return (
     <div className="space-y-6">
@@ -88,7 +81,9 @@ export function MoodTracker() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[#001f4d]">How are you feeling today?</h2>
-            <p className="text-slate-600">Select your current mood and add any notes you'd like to remember</p>
+            <p className="text-slate-600">
+              Select your current mood and add any notes you'd like to remember
+            </p>
           </div>
         </div>
 
@@ -107,7 +102,9 @@ export function MoodTracker() {
                     : 'border-slate-200 hover:border-indigo-300'
                 }`}
               >
-                <span className="text-4xl mb-2 transform transition-transform duration-200 hover:scale-110">{mood.emoji}</span>
+                <span className="text-4xl mb-2 transform transition-transform duration-200 hover:scale-110">
+                  {mood.emoji}
+                </span>
                 <span className="text-sm font-semibold text-slate-700">{mood.label}</span>
               </motion.button>
             ))}
@@ -134,14 +131,16 @@ export function MoodTracker() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7 }}
           >
-            <Button 
-              onClick={saveMoodEntry} 
+            <Button
+              onClick={saveMoodEntry}
               disabled={!selectedMood}
               className={`w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 ${
                 selectedMood ? 'shadow-lg hover:shadow-xl transform hover:-translate-y-0.5' : ''
               }`}
             >
-              {selectedMood ? `Log ${moodEmojis.find(m => m.value === selectedMood)?.label} Mood` : 'Select a mood to continue'}
+              {selectedMood
+                ? `Log ${moodEmojis.find((m) => m.value === selectedMood)?.label} Mood`
+                : 'Select a mood to continue'}
             </Button>
           </motion.div>
         </div>
@@ -222,27 +221,29 @@ export function MoodTracker() {
                   className="flex items-center gap-4 p-4 bg-indigo-50 rounded-xl border border-indigo-100 hover:shadow-md transition-all duration-200"
                 >
                   <div className="text-3xl transform transition-transform duration-200 hover:scale-110">
-                    {moodEmojis.find(m => m.value === entry.mood)?.emoji}
+                    {moodEmojis.find((m) => m.value === entry.mood)?.emoji}
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-slate-800">{new Date(entry.date).toLocaleDateString('en-US', { 
-                      weekday: 'long', 
-                      year: 'numeric', 
-                      month: 'short', 
-                      day: 'numeric' 
-                    })}</div>
+                    <div className="font-semibold text-slate-800">
+                      {new Date(entry.date).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })}
+                    </div>
                     {entry.notes && (
                       <div className="text-sm text-slate-600 mt-1 italic">"{entry.notes}"</div>
                     )}
                   </div>
                   <div className="text-center">
                     <div className="text-sm font-semibold text-slate-700">
-                      {moodEmojis.find(m => m.value === entry.mood)?.label}
+                      {moodEmojis.find((m) => m.value === entry.mood)?.label}
                     </div>
                     <div className="text-xs text-slate-500">
-                      {new Date(entry.timestamp).toLocaleTimeString('en-US', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                      {new Date(entry.timestamp).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </div>
                   </div>

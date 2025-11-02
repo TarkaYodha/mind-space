@@ -1,14 +1,22 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { BrainIcon, PlayIcon, PauseIcon, RotateCcwIcon, ClockIcon, ArrowLeft, Sparkles } from "lucide-react"
+import { motion } from 'framer-motion'
+import {
+  ArrowLeft,
+  BrainIcon,
+  ClockIcon,
+  PauseIcon,
+  PlayIcon,
+  RotateCcwIcon,
+  Sparkles,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { NavBar } from '@/components/layout/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 
 interface MindfulnessExercise {
   id: string
@@ -30,48 +38,48 @@ export default function MindfulnessCoachPage() {
       title: 'Deep Breathing',
       description: 'Simple breath awareness for relaxation',
       duration: 300,
-      type: 'breathing'
+      type: 'breathing',
     },
     {
       id: 'body-scan',
       title: 'Body Scan',
       description: 'Progressive relaxation meditation',
       duration: 600,
-      type: 'meditation'
+      type: 'meditation',
     },
     {
       id: 'visualization',
       title: 'Peaceful Visualization',
       description: 'Guided imagery for calm and peace',
       duration: 480,
-      type: 'visualization'
+      type: 'visualization',
     },
     {
       id: 'mindful-walk',
       title: 'Mindful Walking',
       description: 'Walking meditation practice',
       duration: 420,
-      type: 'movement'
+      type: 'movement',
     },
     {
       id: 'loving-kindness',
       title: 'Loving Kindness',
       description: 'Compassion meditation practice',
       duration: 540,
-      type: 'meditation'
+      type: 'meditation',
     },
     {
       id: 'quick-reset',
       title: 'Quick Reset',
       description: 'Fast 3-minute mindfulness break',
       duration: 180,
-      type: 'breathing'
-    }
+      type: 'breathing',
+    },
   ]
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null
-    
+
     if (isPlaying && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft((prev) => {
@@ -83,7 +91,7 @@ export default function MindfulnessCoachPage() {
         })
       }, 1000)
     }
-    
+
     return () => {
       if (interval) clearInterval(interval)
     }
@@ -129,11 +137,7 @@ export default function MindfulnessCoachPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-8"
           >
-            <Button
-              variant="ghost"
-              asChild
-              className="mb-4"
-            >
+            <Button variant="ghost" asChild className="mb-4">
               <Link href="/tools">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Tools
@@ -158,8 +162,8 @@ export default function MindfulnessCoachPage() {
               <Badge className="bg-[#001f4d] text-white hover:bg-[#001437]">Wellness Tool</Badge>
             </div>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Practice guided mindfulness exercises to reduce stress, improve focus, and cultivate inner peace.
-              Take a moment to breathe and center yourself.
+              Practice guided mindfulness exercises to reduce stress, improve focus, and cultivate
+              inner peace. Take a moment to breathe and center yourself.
             </p>
           </motion.div>
 
@@ -175,11 +179,11 @@ export default function MindfulnessCoachPage() {
                 <Sparkles className="h-6 w-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-purple-800 mb-2">
-                  Mindfulness Tip
-                </h3>
+                <h3 className="text-lg font-semibold text-purple-800 mb-2">Mindfulness Tip</h3>
                 <p className="text-purple-700">
-                  Find a quiet space where you won't be disturbed. Sit comfortably with your back straight. Focus on your breath and gently return your attention when your mind wanders.
+                  Find a quiet space where you won't be disturbed. Sit comfortably with your back
+                  straight. Focus on your breath and gently return your attention when your mind
+                  wanders.
                 </p>
               </div>
             </div>
@@ -196,7 +200,9 @@ export default function MindfulnessCoachPage() {
               <Card className="bg-white border border-slate-100 shadow-lg">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">{currentExercise.title}</h2>
+                    <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                      {currentExercise.title}
+                    </h2>
                     <p className="text-slate-600">{currentExercise.description}</p>
                   </div>
 
@@ -228,11 +234,7 @@ export default function MindfulnessCoachPage() {
                         </>
                       )}
                     </Button>
-                    <Button
-                      onClick={resetTimer}
-                      variant="outline"
-                      size="lg"
-                    >
+                    <Button onClick={resetTimer} variant="outline" size="lg">
                       <RotateCcwIcon className="w-5 h-5 mr-2" />
                       Reset
                     </Button>
@@ -251,22 +253,26 @@ export default function MindfulnessCoachPage() {
             <h2 className="text-2xl font-bold text-slate-900 mb-6">Guided Exercises</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mindfulnessExercises.map((exercise) => (
-                <Card 
-                  key={exercise.id} 
+                <Card
+                  key={exercise.id}
                   className={`bg-white border shadow hover:shadow-lg transition-all ${
-                    currentExercise?.id === exercise.id ? 'border-indigo-400 ring-2 ring-indigo-200' : 'border-slate-100'
+                    currentExercise?.id === exercise.id
+                      ? 'border-indigo-400 ring-2 ring-indigo-200'
+                      : 'border-slate-100'
                   }`}
                 >
                   <CardContent className="p-6">
                     <div className="mb-4">
-                      <h3 className="font-semibold text-slate-900 mb-2 text-lg">{exercise.title}</h3>
+                      <h3 className="font-semibold text-slate-900 mb-2 text-lg">
+                        {exercise.title}
+                      </h3>
                       <p className="text-sm text-slate-600 mb-3">{exercise.description}</p>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <ClockIcon className="w-4 h-4" />
                         <span>{Math.floor(exercise.duration / 60)} minutes</span>
                       </div>
                     </div>
-                    <Button 
+                    <Button
                       variant="outline"
                       size="sm"
                       className="w-full"

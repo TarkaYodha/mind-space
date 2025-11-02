@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
+import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -15,15 +15,17 @@ const inputVariants = cva(
       variant: {
         default: 'bg-background/50',
         filled: 'bg-muted/50 border-transparent hover:bg-muted/70 focus-visible:bg-background',
-        ghost: 'border-transparent shadow-none hover:bg-muted/30 focus-visible:border-border focus-visible:bg-background',
-        search: 'pl-10 bg-muted/30 border-transparent rounded-full hover:bg-muted/50 focus-visible:bg-background focus-visible:border-border',
+        ghost:
+          'border-transparent shadow-none hover:bg-muted/30 focus-visible:border-border focus-visible:bg-background',
+        search:
+          'pl-10 bg-muted/30 border-transparent rounded-full hover:bg-muted/50 focus-visible:bg-background focus-visible:border-border',
       },
     },
     defaultVariants: {
       size: 'default',
       variant: 'default',
     },
-  }
+  },
 )
 
 interface InputProps
@@ -50,7 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             inputVariants({ size, variant }),
             icon && 'pl-10',
             suffix && 'pr-10',
-            className
+            className,
           )}
           {...props}
         />
@@ -61,7 +63,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     )
-  }
+  },
 )
 
 Input.displayName = 'Input'

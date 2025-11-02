@@ -1,109 +1,138 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Footer } from "@/components/layout/footer"
-import { OnboardingGuide } from "@/components/ui/onboarding-guide"
-import { 
-  MessageCircle, 
-  ClipboardList, 
-  Phone, 
-  Heart,
-  TrendingUp,
+import { motion } from 'framer-motion'
+import {
   Calendar,
+  ClipboardList,
+  FileText,
+  Heart,
   LayoutDashboard,
-  FileText
-} from "lucide-react"
+  MessageCircle,
+  Phone,
+  TrendingUp,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
+import { Footer } from '@/components/layout/footer'
+import { NavBar } from '@/components/layout/navbar'
+import { OnboardingGuide } from '@/components/ui/onboarding-guide'
 
 export default function DashboardPage() {
+  const { data: session, status } = useSession()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/sign-in')
+    }
+  }, [status, router])
+
+  // Show loading state while checking authentication
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#001f4d] mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Don't render dashboard if not authenticated
+  if (!session) {
+    return null
+  }
+
   const quickActions = [
     {
-      title: "Start AI Chat",
-      description: "Get immediate support",
-      href: "/chat",
+      title: 'Start AI Chat',
+      description: 'Get immediate support',
+      href: '/chat',
       icon: <MessageCircle className="h-5 w-5" />,
-      variant: "default" as const,
-      badge: "24/7 Available"
+      variant: 'default' as const,
+      badge: '24/7 Available',
     },
     {
-      title: "Take Assessment", 
-      description: "Understand your mental health",
-      href: "/assessments",
+      title: 'Take Assessment',
+      description: 'Understand your mental health',
+      href: '/assessments',
       icon: <ClipboardList className="h-5 w-5" />,
-      variant: "outline" as const
+      variant: 'outline' as const,
     },
     {
-      title: "Track Your Mood",
-      description: "Log daily emotions", 
-      href: "/tools/mood-tracker",
+      title: 'Track Your Mood',
+      description: 'Log daily emotions',
+      href: '/tools/mood-tracker',
       icon: <Heart className="h-5 w-5" />,
-      variant: "outline" as const
+      variant: 'outline' as const,
     },
     {
-      title: "Wellness Tools",
-      description: "Explore all tools",
-      href: "/tools", 
+      title: 'Wellness Tools',
+      description: 'Explore all tools',
+      href: '/tools',
       icon: <LayoutDashboard className="h-5 w-5" />,
-      variant: "outline" as const
-    }
+      variant: 'outline' as const,
+    },
   ]
 
   const wellnessTools = [
     {
-      title: "Mood Tracker",
-      description: "Track daily emotions and identify patterns",
-      href: "/tools/mood-tracker",
+      title: 'Mood Tracker',
+      description: 'Track daily emotions and identify patterns',
+      href: '/tools/mood-tracker',
       icon: <Heart className="h-4 w-4" />,
-      status: "Continue tracking"
+      status: 'Continue tracking',
     },
     {
-      title: "Stress Monitor", 
-      description: "Monitor and manage stress levels",
-      href: "/tools/stress-monitor",
+      title: 'Stress Monitor',
+      description: 'Monitor and manage stress levels',
+      href: '/tools/stress-monitor',
       icon: <TrendingUp className="h-4 w-4" />,
-      status: "Check stress level"
+      status: 'Check stress level',
     },
     {
-      title: "Wellness Journal",
-      description: "Private reflection space",
-      href: "/tools/wellness-journal", 
+      title: 'Wellness Journal',
+      description: 'Private reflection space',
+      href: '/tools/wellness-journal',
       icon: <FileText className="h-4 w-4" />,
-      status: "Write new entry"
+      status: 'Write new entry',
     },
     {
-      title: "Self-Care Planner",
-      description: "Plan your self-care activities",
-      href: "/tools/self-care-planner",
+      title: 'Self-Care Planner',
+      description: 'Plan your self-care activities',
+      href: '/tools/self-care-planner',
       icon: <Calendar className="h-4 w-4" />,
-      status: "Schedule activities"
-    }
+      status: 'Schedule activities',
+    },
   ]
 
   const learningResources = [
     {
-      title: "AI Chat Support",
-      description: "Get personalized mental health assistance",
-      href: "/chat",
-      category: "Support"
+      title: 'AI Chat Support',
+      description: 'Get personalized mental health assistance',
+      href: '/chat',
+      category: 'Support',
     },
     {
-      title: "Mental Health Tools",
-      description: "Track your progress with wellness tools",
-      href: "/tools", 
-      category: "Tools"
+      title: 'Mental Health Tools',
+      description: 'Track your progress with wellness tools',
+      href: '/tools',
+      category: 'Tools',
     },
     {
-      title: "Emergency Resources",
-      description: "Access crisis support when needed",
-      href: "/emergency",
-      category: "Crisis"
-    }
+      title: 'Emergency Resources',
+      description: 'Access crisis support when needed',
+      href: '/emergency',
+      category: 'Crisis',
+    },
   ]
 
   return (
     <>
-  <NavBar />
+      <NavBar />
 
       {/* Main Content - Matching Homepage Style */}
       <section className="w-full bg-gradient-to-b from-white to-blue-50 py-20 pt-28">
@@ -114,7 +143,8 @@ export default function DashboardPage() {
               Your Wellness <span className="text-[#090847be]">Dashboard</span>
             </h1>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Your central hub for mental health support, tools, and resources. Take control of your wellness journey.
+              Your central hub for mental health support, tools, and resources. Take control of your
+              wellness journey.
             </p>
           </div>
 
@@ -225,12 +255,12 @@ export default function DashboardPage() {
                 <Link
                   href={action.href}
                   className={`block w-full text-center py-2 rounded-lg font-semibold transition-colors ${
-                    action.variant === "default" 
-                      ? "bg-[#001f4d] text-white hover:bg-[#001437]" 
-                      : "border border-[#001f4d] text-[#001f4d] hover:bg-[#001f4d] hover:text-white"
+                    action.variant === 'default'
+                      ? 'bg-[#001f4d] text-white hover:bg-[#001437]'
+                      : 'border border-[#001f4d] text-[#001f4d] hover:bg-[#001f4d] hover:text-white'
                   }`}
                 >
-                  {action.variant === "default" ? "Start Now" : "Open"}
+                  {action.variant === 'default' ? 'Start Now' : 'Open'}
                 </Link>
               </motion.div>
             ))}

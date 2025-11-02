@@ -1,122 +1,126 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { Shield, Users, Brain, Leaf } from "lucide-react"
-import { useState } from "react"
-import { NavBar } from "@/components/layout/navbar"
-import { Footer } from "@/components/layout/footer"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CheckCircle2 } from "lucide-react"
+import { motion } from 'framer-motion'
+import { Brain, CheckCircle2, Leaf, Shield, Users } from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { Footer } from '@/components/layout/footer'
+import { NavBar } from '@/components/layout/navbar'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 export default function Home() {
-
   // --- Mood Box State ---
-  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
-  const [response, setResponse] = useState("");
+  const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null)
+  const [response, setResponse] = useState('')
 
   const emojiOptions = [
-    { emoji: "😊", label: "Amazing", type: "default" },
-    { emoji: "🙂", label: "Good", type: "default" },
-    { emoji: "😐", label: "Okay", type: "anxious" },
-    { emoji: "😔", label: "Low", type: "sad" },
-    { emoji: "😢", label: "Struggling", type: "lonely" },
-  ];
+    { emoji: '😊', label: 'Amazing', type: 'default' },
+    { emoji: '🙂', label: 'Good', type: 'default' },
+    { emoji: '😐', label: 'Okay', type: 'anxious' },
+    { emoji: '😔', label: 'Low', type: 'sad' },
+    { emoji: '😢', label: 'Struggling', type: 'lonely' },
+  ]
 
   const responses = {
     anxious: [
       "I hear the anxiety in your words 💙. Take a slow breath… You're safe.",
-      "Anxiety can feel overwhelming 🌱. Try naming 3 things you can see around you."
+      'Anxiety can feel overwhelming 🌱. Try naming 3 things you can see around you.',
     ],
     sad: [
       "I'm sorry you're feeling low 💜. It's okay to let the sadness be here.",
-      "Sadness can feel heavy 🌧. Sharing a little lightens it—thank you."
+      'Sadness can feel heavy 🌧. Sharing a little lightens it—thank you.',
     ],
     lonely: [
       "Loneliness can really hurt 💔. Remember you're not alone.",
-      "Feeling disconnected is tough 🌙. One small comforting step can help."
+      'Feeling disconnected is tough 🌙. One small comforting step can help.',
     ],
     default: [
       "Thanks for sharing 💙. I'm listening. Want to tell me more?",
-      "I hear you 🌸. That takes courage to put into words."
-    ]
-  };
+      'I hear you 🌸. That takes courage to put into words.',
+    ],
+  }
 
   const handleEmojiClick = (type: string) => {
-    setSelectedEmoji(type);
-    const msgs = responses[type as keyof typeof responses] || responses["default"];
-    const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
-    setResponse(randomMsg);
-  };
+    setSelectedEmoji(type)
+    const msgs = responses[type as keyof typeof responses] || responses['default']
+    const randomMsg = msgs[Math.floor(Math.random() * msgs.length)]
+    setResponse(randomMsg)
+  }
 
   // --- Feedback Form State ---
   const [feedbackData, setFeedbackData] = useState({
-    category: "",
-    rating: "",
-    message: "",
-    email: ""
-  });
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+    category: '',
+    rating: '',
+    message: '',
+    email: '',
+  })
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
 
   const handleFeedbackSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(feedbackData);
-    setFeedbackSubmitted(true);
+    e.preventDefault()
+    console.log(feedbackData)
+    setFeedbackSubmitted(true)
     setTimeout(() => {
-      setFeedbackSubmitted(false);
-      setFeedbackData({ category: "", rating: "", message: "", email: "" });
-    }, 3000);
-  };
+      setFeedbackSubmitted(false)
+      setFeedbackData({ category: '', rating: '', message: '', email: '' })
+    }, 3000)
+  }
 
   const feedbackCategories = [
-    { value: "general", label: "General Feedback" },
-    { value: "feature", label: "Feature Request" },
-    { value: "bug", label: "Bug Report" },
-    { value: "appreciation", label: "Appreciation" }
-  ];
+    { value: 'general', label: 'General Feedback' },
+    { value: 'feature', label: 'Feature Request' },
+    { value: 'bug', label: 'Bug Report' },
+    { value: 'appreciation', label: 'Appreciation' },
+  ]
 
   const feedbackRatings = [
-    { value: "5", label: "⭐⭐⭐⭐⭐ Excellent" },
-    { value: "4", label: "⭐⭐⭐⭐ Good" },
-    { value: "3", label: "⭐⭐⭐ Average" },
-    { value: "2", label: "⭐⭐ Poor" },
-    { value: "1", label: "⭐ Very Poor" }
-  ];
+    { value: '5', label: '⭐⭐⭐⭐⭐ Excellent' },
+    { value: '4', label: '⭐⭐⭐⭐ Good' },
+    { value: '3', label: '⭐⭐⭐ Average' },
+    { value: '2', label: '⭐⭐ Poor' },
+    { value: '1', label: '⭐ Very Poor' },
+  ]
 
   // --- Features & Steps ---
   const features = [
     {
       icon: <Leaf className="w-6 h-6 text-green-600" />,
-      title: "Personal Growth",
-      desc: "Track your emotions and build resilience with daily check-ins.",
+      title: 'Personal Growth',
+      desc: 'Track your emotions and build resilience with daily check-ins.',
     },
     {
       icon: <Users className="w-6 h-6 text-indigo-600" />,
-      title: "Community Support",
-      desc: "Join a safe student community, share experiences, and grow together.",
+      title: 'Community Support',
+      desc: 'Join a safe student community, share experiences, and grow together.',
     },
     {
       icon: <Brain className="w-6 h-6 text-[#E59866]" />,
-      title: "AI Insights",
-      desc: "Smart suggestions and emotional trends powered by AI insights.",
+      title: 'AI Insights',
+      desc: 'Smart suggestions and emotional trends powered by AI insights.',
     },
     {
       icon: <Shield className="w-6 h-6 text-blue-600" />,
-      title: "Privacy First",
-      desc: "Your data is fully protected and remains confidential at all times.",
+      title: 'Privacy First',
+      desc: 'Your data is fully protected and remains confidential at all times.',
     },
-  ];
+  ]
 
   const steps = [
-    { step: "1", title: "Check-In Daily", desc: "Share how you feel in seconds." },
-    { step: "2", title: "Get Insights", desc: "Understand your emotional patterns with AI." },
-    { step: "3", title: "Take Action", desc: "Explore guided activities and expert resources." },
-    { step: "4", title: "Grow Together", desc: "Connect with peers and supportive communities." },
-  ];
+    { step: '1', title: 'Check-In Daily', desc: 'Share how you feel in seconds.' },
+    { step: '2', title: 'Get Insights', desc: 'Understand your emotional patterns with AI.' },
+    { step: '3', title: 'Take Action', desc: 'Explore guided activities and expert resources.' },
+    { step: '4', title: 'Grow Together', desc: 'Connect with peers and supportive communities.' },
+  ]
 
   return (
     <>
@@ -125,17 +129,17 @@ export default function Home() {
       {/* Hero Section */}
       <section className="w-full bg-gradient-to-b from-white to-blue-50 py-20">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between px-6 md:px-12">
-
           {/* Left Content */}
           <div className="w-full md:w-1/2 text-left md:text-left">
             <h1 className="text-4xl text-black sm:text-5xl lg:text-6xl mb-4 font-bold">
-              Your Mental<br /> Wellness
+              Your Mental
+              <br /> Wellness
             </h1>
             <h2 className="text-2xl sm:text-3xl mb-4 font-bold">Journey Start Here</h2>
             <p className="mt-3 text-gray-600 ml-0 sm:ml-2 mb-6">
-              A safe digital sanctuary where students can explore their emotional
-              landscape with confidence, get AI-powered insights, and connect with
-              professional support when needed.
+              A safe digital sanctuary where students can explore their emotional landscape with
+              confidence, get AI-powered insights, and connect with professional support when
+              needed.
             </p>
 
             <div className="flex flex-row flex-wrap gap-4">
@@ -156,9 +160,7 @@ export default function Home() {
 
           {/* Right Mood Box */}
           <div className="w-full md:w-1/2 mt-8 md:mt-0 bg-white p-6 rounded-2xl shadow-xl max-w-md mx-auto relative">
-            <h2 className="text-xl font-semibold text-black mb-2">
-              How are you feeling today?
-            </h2>
+            <h2 className="text-xl font-semibold text-black mb-2">How are you feeling today?</h2>
             <p className="text-sm text-gray-700 mt-1 mb-4">
               Quick check-in to start tracking your emotional patterns
             </p>
@@ -168,7 +170,7 @@ export default function Home() {
                 <div
                   key={idx}
                   className={`flex flex-col items-center cursor-pointer transform transition-all duration-200 hover:scale-110 ${
-                    selectedEmoji === item.type ? "scale-125" : ""
+                    selectedEmoji === item.type ? 'scale-125' : ''
                   }`}
                   onClick={() => handleEmojiClick(item.type)}
                 >
@@ -184,7 +186,10 @@ export default function Home() {
               </div>
             )}
 
-            <Link href="/assessments" className="mt-6 w-full py-2 rounded-lg font-semibold block text-center bg-[#001f4d] text-white">
+            <Link
+              href="/assessments"
+              className="mt-6 w-full py-2 rounded-lg font-semibold block text-center bg-[#001f4d] text-white"
+            >
               Continue to Full Check-in
             </Link>
           </div>
@@ -290,12 +295,17 @@ export default function Home() {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleFeedbackSubmit} className="bg-white p-6 rounded-2xl shadow-lg space-y-4">
+              <form
+                onSubmit={handleFeedbackSubmit}
+                className="bg-white p-6 rounded-2xl shadow-lg space-y-4"
+              >
                 <div>
-                  <Label htmlFor="feedback-category" className="text-sm font-medium">Category</Label>
-                  <Select 
+                  <Label htmlFor="feedback-category" className="text-sm font-medium">
+                    Category
+                  </Label>
+                  <Select
                     value={feedbackData.category}
-                    onValueChange={(value) => setFeedbackData({...feedbackData, category: value})}
+                    onValueChange={(value) => setFeedbackData({ ...feedbackData, category: value })}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Select category" />
@@ -311,10 +321,12 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <Label htmlFor="feedback-rating" className="text-sm font-medium">Rating</Label>
-                  <Select 
+                  <Label htmlFor="feedback-rating" className="text-sm font-medium">
+                    Rating
+                  </Label>
+                  <Select
                     value={feedbackData.rating}
-                    onValueChange={(value) => setFeedbackData({...feedbackData, rating: value})}
+                    onValueChange={(value) => setFeedbackData({ ...feedbackData, rating: value })}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue placeholder="Rate your experience" />
@@ -330,12 +342,14 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <Label htmlFor="feedback-message" className="text-sm font-medium">Message</Label>
+                  <Label htmlFor="feedback-message" className="text-sm font-medium">
+                    Message
+                  </Label>
                   <Textarea
                     id="feedback-message"
                     placeholder="Your feedback..."
                     value={feedbackData.message}
-                    onChange={(e) => setFeedbackData({...feedbackData, message: e.target.value})}
+                    onChange={(e) => setFeedbackData({ ...feedbackData, message: e.target.value })}
                     rows={3}
                     className="mt-1"
                     required
@@ -343,19 +357,21 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <Label htmlFor="feedback-email" className="text-sm font-medium">Email (optional)</Label>
+                  <Label htmlFor="feedback-email" className="text-sm font-medium">
+                    Email (optional)
+                  </Label>
                   <Input
                     id="feedback-email"
                     type="email"
                     placeholder="your@email.com"
                     value={feedbackData.email}
-                    onChange={(e) => setFeedbackData({...feedbackData, email: e.target.value})}
+                    onChange={(e) => setFeedbackData({ ...feedbackData, email: e.target.value })}
                     className="mt-1"
                   />
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
                   disabled={!feedbackData.category || !feedbackData.rating || !feedbackData.message}
                 >

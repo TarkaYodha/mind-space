@@ -1,5 +1,5 @@
-import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
+import type * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -31,15 +31,15 @@ const cardVariants = cva(
       padding: 'default',
       interactive: false,
     },
-  }
+  },
 )
 
-function Card({ 
-  className, 
-  variant, 
-  padding, 
-  interactive, 
-  ...props 
+function Card({
+  className,
+  variant,
+  padding,
+  interactive,
+  ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof cardVariants>) {
   return (
     <div
@@ -84,19 +84,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="card-content"
-      className={cn('px-6 space-y-4', className)}
-      {...props}
-    />
-  )
+  return <div data-slot="card-content" className={cn('px-6 space-y-4', className)} {...props} />
 }
 
-export {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-}
+export { Card, CardHeader, CardTitle, CardDescription, CardContent }

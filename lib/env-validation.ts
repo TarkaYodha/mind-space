@@ -4,8 +4,10 @@
  */
 
 const requiredEnvVars = [
-  'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
-  'CLERK_SECRET_KEY',
+  'DATABASE_URL',
+  'NEXTAUTH_SECRET',
+  'GOOGLE_CLIENT_ID',
+  'GOOGLE_CLIENT_SECRET',
 ] as const
 
 interface ValidationResult {
@@ -29,20 +31,15 @@ export function validateEnv(): ValidationResult {
   }
 
   // Check optional but recommended variables
-  const hasAnyAIKey = 
-    process.env.GEMINI_API_KEY || 
-    process.env.OPENAI_API_KEY || 
-    process.env.OPENROUTER_API_KEY
-
-  if (!hasAnyAIKey) {
+  if (!process.env.GEMINI_API_KEY) {
     warnings.push(
-      'No AI API keys configured. At least one of GEMINI_API_KEY, OPENAI_API_KEY, or OPENROUTER_API_KEY should be set for chat functionality.'
+      'GEMINI_API_KEY not set. Chat functionality requires Gemini API key to be configured.',
     )
   }
 
   if (!process.env.NEXT_PUBLIC_APP_URL) {
     warnings.push(
-      'NEXT_PUBLIC_APP_URL not set. Using default value. Set this for production deployments.'
+      'NEXT_PUBLIC_APP_URL not set. Using default value. Set this for production deployments.',
     )
   }
 
@@ -62,7 +59,7 @@ export function requireEnv(): void {
   if (!result.isValid) {
     const errorMessage = [
       '❌ Missing required environment variables:',
-      ...result.missing.map(v => `  - ${v}`),
+      ...result.missing.map((v) => `  - ${v}`),
       '',
       '📝 Please create a .env.local file based on .env.example',
       'See README.md for setup instructions.',
@@ -73,7 +70,7 @@ export function requireEnv(): void {
 
   if (result.warnings.length > 0) {
     console.warn('⚠️  Environment Configuration Warnings:')
-    result.warnings.forEach(warning => console.warn(`  - ${warning}`))
+    result.warnings.forEach((warning) => console.warn(`  - ${warning}`))
     console.warn('')
   }
 }

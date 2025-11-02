@@ -1,18 +1,31 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TargetIcon, CheckCircleIcon, ClockIcon, StarIcon, ArrowLeft, Lightbulb } from "lucide-react"
+import { motion } from 'framer-motion'
+import {
+  ArrowLeft,
+  CheckCircleIcon,
+  ClockIcon,
+  Lightbulb,
+  StarIcon,
+  TargetIcon,
+} from 'lucide-react'
+import Link from 'next/link'
+import { useState } from 'react'
+import { NavBar } from '@/components/layout/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Progress } from '@/components/ui/progress'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 interface Goal {
   id: string
@@ -36,8 +49,12 @@ export default function GoalSettingPage() {
       targetDate: '2025-12-31',
       progress: 65,
       status: 'active',
-      milestones: ['Week 1: Establish routine', 'Week 4: Increase to 10 minutes', 'Week 8: Notice stress reduction'],
-      createdAt: '2025-09-01'
+      milestones: [
+        'Week 1: Establish routine',
+        'Week 4: Increase to 10 minutes',
+        'Week 8: Notice stress reduction',
+      ],
+      createdAt: '2025-09-01',
     },
     {
       id: '2',
@@ -47,9 +64,13 @@ export default function GoalSettingPage() {
       targetDate: '2025-11-30',
       progress: 40,
       status: 'active',
-      milestones: ['Week 1: Set bedtime alarm', 'Week 2: No screens 1hr before bed', 'Week 4: Consistent schedule'],
-      createdAt: '2025-09-15'
-    }
+      milestones: [
+        'Week 1: Set bedtime alarm',
+        'Week 2: No screens 1hr before bed',
+        'Week 4: Consistent schedule',
+      ],
+      createdAt: '2025-09-15',
+    },
   ])
 
   const [showNewGoalForm, setShowNewGoalForm] = useState(false)
@@ -58,7 +79,7 @@ export default function GoalSettingPage() {
     description: '',
     category: '',
     targetDate: '',
-    milestones: ['', '', '']
+    milestones: ['', '', ''],
   })
 
   const categories = [
@@ -67,7 +88,7 @@ export default function GoalSettingPage() {
     { value: 'social', label: 'Social Connection' },
     { value: 'academic', label: 'Academic Success' },
     { value: 'emotional', label: 'Emotional Health' },
-    { value: 'habits', label: 'Healthy Habits' }
+    { value: 'habits', label: 'Healthy Habits' },
   ]
 
   const handleCreateGoal = () => {
@@ -80,21 +101,29 @@ export default function GoalSettingPage() {
         targetDate: newGoal.targetDate,
         progress: 0,
         status: 'active',
-        milestones: newGoal.milestones.filter(m => m.trim() !== ''),
-        createdAt: new Date().toISOString().split('T')[0]
+        milestones: newGoal.milestones.filter((m) => m.trim() !== ''),
+        createdAt: new Date().toISOString().split('T')[0],
       }
       setGoals([...goals, goal])
-      setNewGoal({ title: '', description: '', category: '', targetDate: '', milestones: ['', '', ''] })
+      setNewGoal({
+        title: '',
+        description: '',
+        category: '',
+        targetDate: '',
+        milestones: ['', '', ''],
+      })
       setShowNewGoalForm(false)
     }
   }
 
   const updateGoalProgress = (goalId: string, progress: number) => {
-    setGoals(goals.map(goal => 
-      goal.id === goalId 
-        ? { ...goal, progress, status: progress === 100 ? 'completed' : 'active' }
-        : goal
-    ))
+    setGoals(
+      goals.map((goal) =>
+        goal.id === goalId
+          ? { ...goal, progress, status: progress === 100 ? 'completed' : 'active' }
+          : goal,
+      ),
+    )
   }
 
   const getCategoryColor = (category: string) => {
@@ -104,7 +133,7 @@ export default function GoalSettingPage() {
       social: 'bg-blue-100 text-blue-700',
       academic: 'bg-orange-100 text-orange-700',
       emotional: 'bg-pink-100 text-pink-700',
-      habits: 'bg-indigo-100 text-indigo-700'
+      habits: 'bg-indigo-100 text-indigo-700',
     }
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-700'
   }
@@ -122,11 +151,7 @@ export default function GoalSettingPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-8"
           >
-            <Button
-              variant="ghost"
-              asChild
-              className="mb-4"
-            >
+            <Button variant="ghost" asChild className="mb-4">
               <Link href="/tools">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Tools
@@ -154,7 +179,7 @@ export default function GoalSettingPage() {
               Achieve meaningful change through structured goal-setting and consistent tracking.
             </p>
           </motion.div>
-          
+
           {/* Quick Tips */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -167,12 +192,11 @@ export default function GoalSettingPage() {
                 <Lightbulb className="h-6 w-6 text-indigo-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-indigo-800 mb-2">
-                  SMART Goal Framework
-                </h3>
+                <h3 className="text-lg font-semibold text-indigo-800 mb-2">SMART Goal Framework</h3>
                 <p className="text-indigo-700">
-                  Make your goals Specific, Measurable, Achievable, Relevant, and Time-bound for the best results.
-                  Start small and build momentum - even 1% improvement daily adds up to amazing progress!
+                  Make your goals Specific, Measurable, Achievable, Relevant, and Time-bound for the
+                  best results. Start small and build momentum - even 1% improvement daily adds up
+                  to amazing progress!
                 </p>
               </div>
             </div>
@@ -194,7 +218,7 @@ export default function GoalSettingPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-blue-600">
-                  {goals.filter(g => g.status === 'active').length}
+                  {goals.filter((g) => g.status === 'active').length}
                 </div>
                 <p className="text-sm text-slate-600">Goals in progress</p>
               </CardContent>
@@ -209,7 +233,7 @@ export default function GoalSettingPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-green-600">
-                  {goals.filter(g => g.status === 'completed').length}
+                  {goals.filter((g) => g.status === 'completed').length}
                 </div>
                 <p className="text-sm text-slate-600">Goals achieved</p>
               </CardContent>
@@ -224,7 +248,10 @@ export default function GoalSettingPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-yellow-600">
-                  {goals.length > 0 ? Math.round(goals.reduce((acc, goal) => acc + goal.progress, 0) / goals.length) : 0}%
+                  {goals.length > 0
+                    ? Math.round(goals.reduce((acc, goal) => acc + goal.progress, 0) / goals.length)
+                    : 0}
+                  %
                 </div>
                 <p className="text-sm text-slate-600">Across all goals</p>
               </CardContent>
@@ -246,7 +273,7 @@ export default function GoalSettingPage() {
                       Track your mental health and wellness goals
                     </CardDescription>
                   </div>
-                  <Button 
+                  <Button
                     onClick={() => setShowNewGoalForm(!showNewGoalForm)}
                     className="bg-[#001f4d] hover:bg-[#001437] text-white"
                   >
@@ -259,33 +286,42 @@ export default function GoalSettingPage() {
                 {showNewGoalForm && (
                   <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 space-y-4">
                     <h3 className="text-lg font-semibold text-slate-900">Create New Goal</h3>
-                    
+
                     <div>
-                      <Label htmlFor="title" className="text-slate-700 font-medium">Goal Title</Label>
+                      <Label htmlFor="title" className="text-slate-700 font-medium">
+                        Goal Title
+                      </Label>
                       <Input
                         id="title"
                         placeholder="e.g., Practice daily gratitude"
                         value={newGoal.title}
-                        onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
+                        onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div>
-                      <Label htmlFor="description" className="text-slate-700 font-medium">Description</Label>
+                      <Label htmlFor="description" className="text-slate-700 font-medium">
+                        Description
+                      </Label>
                       <Textarea
                         id="description"
                         placeholder="Describe what you want to achieve and why it's important to you"
                         value={newGoal.description}
-                        onChange={(e) => setNewGoal({...newGoal, description: e.target.value})}
+                        onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
                         className="mt-1"
                       />
                     </div>
-                    
+
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="category" className="text-slate-700 font-medium">Category</Label>
-                        <Select value={newGoal.category} onValueChange={(value) => setNewGoal({...newGoal, category: value})}>
+                        <Label htmlFor="category" className="text-slate-700 font-medium">
+                          Category
+                        </Label>
+                        <Select
+                          value={newGoal.category}
+                          onValueChange={(value) => setNewGoal({ ...newGoal, category: value })}
+                        >
                           <SelectTrigger className="mt-1">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
@@ -298,19 +334,21 @@ export default function GoalSettingPage() {
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div>
-                        <Label htmlFor="targetDate" className="text-slate-700 font-medium">Target Date</Label>
+                        <Label htmlFor="targetDate" className="text-slate-700 font-medium">
+                          Target Date
+                        </Label>
                         <Input
                           id="targetDate"
                           type="date"
                           value={newGoal.targetDate}
-                          onChange={(e) => setNewGoal({...newGoal, targetDate: e.target.value})}
+                          onChange={(e) => setNewGoal({ ...newGoal, targetDate: e.target.value })}
                           className="mt-1"
                         />
                       </div>
                     </div>
-                    
+
                     <div>
                       <Label className="text-slate-700 font-medium">Milestones (Optional)</Label>
                       {newGoal.milestones.map((milestone, index) => (
@@ -321,14 +359,14 @@ export default function GoalSettingPage() {
                           onChange={(e) => {
                             const newMilestones = [...newGoal.milestones]
                             newMilestones[index] = e.target.value
-                            setNewGoal({...newGoal, milestones: newMilestones})
+                            setNewGoal({ ...newGoal, milestones: newMilestones })
                           }}
                           className="mt-2"
                         />
                       ))}
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleCreateGoal}
                       className="w-full bg-[#001f4d] hover:bg-[#001437] text-white"
                     >
@@ -349,7 +387,7 @@ export default function GoalSettingPage() {
                           <div className="flex items-center gap-2">
                             <h3 className="text-xl font-semibold text-slate-900">{goal.title}</h3>
                             <Badge className={getCategoryColor(goal.category)}>
-                              {categories.find(c => c.value === goal.category)?.label}
+                              {categories.find((c) => c.value === goal.category)?.label}
                             </Badge>
                             {goal.status === 'completed' && (
                               <Badge className="bg-green-100 text-green-700">
@@ -367,23 +405,26 @@ export default function GoalSettingPage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div>
                         <div className="flex justify-between items-center mb-2">
                           <Label className="text-sm font-medium text-slate-700">Progress</Label>
-                          <span className="text-sm font-medium text-slate-900">{goal.progress}%</span>
+                          <span className="text-sm font-medium text-slate-900">
+                            {goal.progress}%
+                          </span>
                         </div>
                         <Progress value={goal.progress} className="mb-2 h-2" />
                         <div className="flex gap-2">
                           {[0, 25, 50, 75, 100].map((value) => (
                             <Button
                               key={value}
-                              variant={goal.progress === value ? "default" : "outline"}
+                              variant={goal.progress === value ? 'default' : 'outline'}
                               size="sm"
                               onClick={() => updateGoalProgress(goal.id, value)}
-                              className={goal.progress === value 
-                                ? "bg-[#001f4d] hover:bg-[#001437] text-white" 
-                                : ""
+                              className={
+                                goal.progress === value
+                                  ? 'bg-[#001f4d] hover:bg-[#001437] text-white'
+                                  : ''
                               }
                             >
                               {value}%
@@ -391,13 +432,18 @@ export default function GoalSettingPage() {
                           ))}
                         </div>
                       </div>
-                      
+
                       {goal.milestones.length > 0 && (
                         <div>
-                          <Label className="text-sm font-medium mb-2 block text-slate-700">Milestones</Label>
+                          <Label className="text-sm font-medium mb-2 block text-slate-700">
+                            Milestones
+                          </Label>
                           <ul className="space-y-1">
                             {goal.milestones.map((milestone, index) => (
-                              <li key={index} className="flex items-center gap-2 text-sm text-slate-600">
+                              <li
+                                key={index}
+                                className="flex items-center gap-2 text-sm text-slate-600"
+                              >
                                 <div className="w-2 h-2 bg-[#001f4d] rounded-full flex-shrink-0" />
                                 {milestone}
                               </li>

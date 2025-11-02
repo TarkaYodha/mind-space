@@ -1,21 +1,21 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from "framer-motion"
-import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
-import { useToast } from '@/hooks/use-toast'
-import { 
+import { motion } from 'framer-motion'
+import {
   Activity,
   AlertTriangle,
-  TrendingUp,
   BarChart,
-  Target,
   Lightbulb,
   MessageCircle,
   Phone,
-  X
+  Target,
+  TrendingUp,
+  X,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Slider } from '@/components/ui/slider'
+import { useToast } from '@/hooks/use-toast'
 
 interface StressEntry {
   date: string
@@ -36,7 +36,7 @@ const stressTriggers = [
   'Future planning',
   'Time management',
   'Sleep deprivation',
-  'Work/Job stress'
+  'Work/Job stress',
 ]
 
 const copingStrategies = [
@@ -49,7 +49,7 @@ const copingStrategies = [
   'Taking a break',
   'Getting fresh air',
   'Seeking help',
-  'Organizing tasks'
+  'Organizing tasks',
 ]
 
 export function StressMonitor() {
@@ -73,18 +73,14 @@ export function StressMonitor() {
   }
 
   function toggleTrigger(trigger: string) {
-    setSelectedTriggers(prev => 
-      prev.includes(trigger) 
-        ? prev.filter(t => t !== trigger)
-        : [...prev, trigger]
+    setSelectedTriggers((prev) =>
+      prev.includes(trigger) ? prev.filter((t) => t !== trigger) : [...prev, trigger],
     )
   }
 
   function toggleCoping(strategy: string) {
-    setSelectedCoping(prev => 
-      prev.includes(strategy) 
-        ? prev.filter(s => s !== strategy)
-        : [...prev, strategy]
+    setSelectedCoping((prev) =>
+      prev.includes(strategy) ? prev.filter((s) => s !== strategy) : [...prev, strategy],
     )
   }
 
@@ -95,7 +91,7 @@ export function StressMonitor() {
       triggers: selectedTriggers,
       coping_used: selectedCoping,
       notes: notes.trim(),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     const updatedHistory = [...stressHistory, newEntry]
@@ -107,10 +103,10 @@ export function StressMonitor() {
     setSelectedTriggers([])
     setSelectedCoping([])
     setNotes('')
-    
+
     toast({
-      title: "Stress Level Logged",
-      description: "Your stress assessment has been saved!"
+      title: 'Stress Level Logged',
+      description: 'Your stress assessment has been saved!',
     })
 
     // Show recommendations for high stress
@@ -127,9 +123,12 @@ export function StressMonitor() {
     return 'Very High'
   }
 
-  const averageStress = stressHistory.length > 0 
-    ? (stressHistory.reduce((sum, entry) => sum + entry.level, 0) / stressHistory.length).toFixed(1)
-    : null
+  const averageStress =
+    stressHistory.length > 0
+      ? (stressHistory.reduce((sum, entry) => sum + entry.level, 0) / stressHistory.length).toFixed(
+          1,
+        )
+      : null
 
   const recentTrends = stressHistory.slice(-5)
 
@@ -146,7 +145,9 @@ export function StressMonitor() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-[#001f4d]">Current Stress Level</h2>
-            <p className="text-slate-600">Rate your current stress level and identify what's affecting you</p>
+            <p className="text-slate-600">
+              Rate your current stress level and identify what's affecting you
+            </p>
           </div>
         </div>
 
@@ -156,11 +157,15 @@ export function StressMonitor() {
               <label className="text-sm font-semibold text-slate-700">
                 Stress Level: {stressLevel[0]}/10
               </label>
-              <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                stressLevel[0] <= 3 ? 'bg-green-100 text-green-700' :
-                stressLevel[0] <= 6 ? 'bg-yellow-100 text-yellow-700' :
-                'bg-red-100 text-red-700'
-              }`}>
+              <div
+                className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                  stressLevel[0] <= 3
+                    ? 'bg-green-100 text-green-700'
+                    : stressLevel[0] <= 6
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
+                }`}
+              >
                 {getStressLabel(stressLevel[0])}
               </div>
             </div>
@@ -247,8 +252,8 @@ export function StressMonitor() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
           >
-            <Button 
-              onClick={saveStressEntry} 
+            <Button
+              onClick={saveStressEntry}
               className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
             >
               Log Stress Assessment
@@ -269,8 +274,12 @@ export function StressMonitor() {
                 <AlertTriangle className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-amber-800">Stress Management Recommendations</h3>
-                <p className="text-amber-700">Your stress level is high. Here are some immediate strategies to help:</p>
+                <h3 className="text-xl font-bold text-amber-800">
+                  Stress Management Recommendations
+                </h3>
+                <p className="text-amber-700">
+                  Your stress level is high. Here are some immediate strategies to help:
+                </p>
               </div>
             </div>
             <Button
@@ -294,9 +303,11 @@ export function StressMonitor() {
                 <Lightbulb className="h-5 w-5 text-amber-600" />
                 <h4 className="font-semibold text-amber-800">Immediate Relief</h4>
               </div>
-              <p className="text-amber-700">Take 5 deep breaths, step outside for fresh air, or do a quick 2-minute meditation.</p>
+              <p className="text-amber-700">
+                Take 5 deep breaths, step outside for fresh air, or do a quick 2-minute meditation.
+              </p>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -307,7 +318,10 @@ export function StressMonitor() {
                 <Target className="h-5 w-5 text-amber-600" />
                 <h4 className="font-semibold text-amber-800">Longer-term Support</h4>
               </div>
-              <p className="text-amber-700">Consider talking to a mental health professional, prioritizing sleep, and breaking large tasks into smaller steps.</p>
+              <p className="text-amber-700">
+                Consider talking to a mental health professional, prioritizing sleep, and breaking
+                large tasks into smaller steps.
+              </p>
             </motion.div>
 
             <div className="flex flex-wrap gap-2 pt-2">
@@ -370,11 +384,15 @@ export function StressMonitor() {
               transition={{ delay: 0.8 }}
               className="text-center p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200"
             >
-              <div className={`text-3xl font-bold mb-1 ${
-                (recentTrends[recentTrends.length - 1]?.level || 5) <= 3 ? 'text-green-600' :
-                (recentTrends[recentTrends.length - 1]?.level || 5) <= 6 ? 'text-yellow-600' :
-                'text-red-600'
-              }`}>
+              <div
+                className={`text-3xl font-bold mb-1 ${
+                  (recentTrends[recentTrends.length - 1]?.level || 5) <= 3
+                    ? 'text-green-600'
+                    : (recentTrends[recentTrends.length - 1]?.level || 5) <= 6
+                      ? 'text-yellow-600'
+                      : 'text-red-600'
+                }`}
+              >
                 {getStressLabel(recentTrends[recentTrends.length - 1]?.level || 5)}
               </div>
               <div className="text-sm font-medium text-slate-600">Current Level</div>
@@ -398,32 +416,41 @@ export function StressMonitor() {
                   >
                     <div className="flex-1">
                       <div className="font-semibold text-slate-800">
-                        {new Date(entry.date).toLocaleDateString('en-US', { 
-                          weekday: 'long', 
-                          year: 'numeric', 
-                          month: 'short', 
-                          day: 'numeric' 
+                        {new Date(entry.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
                         })}
                       </div>
                       {entry.triggers.length > 0 && (
                         <div className="text-sm text-slate-600 mt-1">
-                          Triggers: {entry.triggers.slice(0, 2).join(', ')}{entry.triggers.length > 2 ? '...' : ''}
+                          Triggers: {entry.triggers.slice(0, 2).join(', ')}
+                          {entry.triggers.length > 2 ? '...' : ''}
                         </div>
                       )}
                     </div>
                     <div className="text-right">
-                      <div className={`text-xl font-bold ${
-                        entry.level <= 3 ? 'text-green-600' :
-                        entry.level <= 6 ? 'text-yellow-600' :
-                        'text-red-600'
-                      }`}>
+                      <div
+                        className={`text-xl font-bold ${
+                          entry.level <= 3
+                            ? 'text-green-600'
+                            : entry.level <= 6
+                              ? 'text-yellow-600'
+                              : 'text-red-600'
+                        }`}
+                      >
                         {entry.level}/10
                       </div>
-                      <div className={`text-sm ${
-                        entry.level <= 3 ? 'text-green-600' :
-                        entry.level <= 6 ? 'text-yellow-600' :
-                        'text-red-600'
-                      }`}>
+                      <div
+                        className={`text-sm ${
+                          entry.level <= 3
+                            ? 'text-green-600'
+                            : entry.level <= 6
+                              ? 'text-yellow-600'
+                              : 'text-red-600'
+                        }`}
+                      >
                         {getStressLabel(entry.level)}
                       </div>
                     </div>

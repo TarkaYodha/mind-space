@@ -17,7 +17,11 @@ export function sanitizeInput(input: string): string {
 /**
  * Validates message input
  */
-export function validateMessage(message: unknown): { valid: boolean; error?: string; sanitized?: string } {
+export function validateMessage(message: unknown): {
+  valid: boolean
+  error?: string
+  sanitized?: string
+} {
   if (typeof message !== 'string') {
     return { valid: false, error: 'Message must be a string' }
   }
@@ -33,13 +37,7 @@ export function validateMessage(message: unknown): { valid: boolean; error?: str
   }
 
   // Check for suspicious patterns
-  const suspiciousPatterns = [
-    /<script/i,
-    /javascript:/i,
-    /onerror=/i,
-    /onclick=/i,
-    /onload=/i,
-  ]
+  const suspiciousPatterns = [/<script/i, /javascript:/i, /onerror=/i, /onclick=/i, /onload=/i]
 
   for (const pattern of suspiciousPatterns) {
     if (pattern.test(trimmed)) {
@@ -88,7 +86,7 @@ export function escapeHtml(text: string): string {
     '"': '&quot;',
     "'": '&#039;',
   }
-  return text.replace(/[&<>"']/g, m => map[m])
+  return text.replace(/[&<>"']/g, (m) => map[m])
 }
 
 /**

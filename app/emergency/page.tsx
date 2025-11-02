@@ -1,61 +1,65 @@
-"use client"
+'use client'
 
-import { PageLayout } from "@/components/layout/page-layout"
-import { Section } from "@/components/layout/page-layout"
-import { CrisisAlert } from "@/components/ui/crisis-alert"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { PhoneIcon, MessageCircleIcon, HeartIcon } from "@/components/ui/icons"
-import { useAuth } from '@clerk/nextjs'
+import { useSession } from 'next-auth/react'
+import { PageLayout, Section } from '@/components/layout/page-layout'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { CrisisAlert } from '@/components/ui/crisis-alert'
+import { HeartIcon, MessageCircleIcon, PhoneIcon } from '@/components/ui/icons'
 
 export default function EmergencyPage() {
-  const { isSignedIn } = useAuth()
+  const { data: session } = useSession()
+  const isSignedIn = !!session
   const crisisResources = [
     {
-      name: "National Suicide Prevention Lifeline",
-      number: "988",
-      description: "24/7 crisis support for anyone in suicidal crisis or emotional distress",
-      action: () => window.open("tel:988"),
+      name: 'National Suicide Prevention Lifeline',
+      number: '988',
+      description: '24/7 crisis support for anyone in suicidal crisis or emotional distress',
+      action: () => window.open('tel:988'),
     },
     {
-      name: "Crisis Text Line",
-      number: "Text HOME to 741741",
-      description: "24/7 crisis support via text message",
-      action: () => window.open("sms:741741?body=HOME"),
+      name: 'Crisis Text Line',
+      number: 'Text HOME to 741741',
+      description: '24/7 crisis support via text message',
+      action: () => window.open('sms:741741?body=HOME'),
     },
     {
-      name: "National Sexual Assault Hotline",
-      number: "1-800-656-4673",
-      description: "24/7 support for survivors of sexual assault",
-      action: () => window.open("tel:18006564673"),
+      name: 'National Sexual Assault Hotline',
+      number: '1-800-656-4673',
+      description: '24/7 support for survivors of sexual assault',
+      action: () => window.open('tel:18006564673'),
     },
     {
-      name: "LGBTQ National Hotline",
-      number: "1-888-843-4564",
-      description: "Support for LGBTQ+ individuals in crisis",
-      action: () => window.open("tel:18888434564"),
+      name: 'LGBTQ National Hotline',
+      number: '1-888-843-4564',
+      description: 'Support for LGBTQ+ individuals in crisis',
+      action: () => window.open('tel:18888434564'),
     },
   ]
 
   const copingStrategies = [
     {
-      title: "Grounding Technique (5-4-3-2-1)",
-      description: "Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.",
+      title: 'Grounding Technique (5-4-3-2-1)',
+      description:
+        'Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.',
       icon: <HeartIcon className="h-5 w-5" />,
     },
     {
-      title: "Deep Breathing",
-      description: "Breathe in for 4 counts, hold for 4, breathe out for 6. Repeat until you feel calmer.",
+      title: 'Deep Breathing',
+      description:
+        'Breathe in for 4 counts, hold for 4, breathe out for 6. Repeat until you feel calmer.',
       icon: <HeartIcon className="h-5 w-5" />,
     },
     {
-      title: "Safe Person Contact",
-      description: "Reach out to a trusted friend, family member, or mental health professional who can provide support.",
+      title: 'Safe Person Contact',
+      description:
+        'Reach out to a trusted friend, family member, or mental health professional who can provide support.',
       icon: <MessageCircleIcon className="h-5 w-5" />,
     },
     {
-      title: "Remove Means",
-      description: "If you're having thoughts of self-harm, remove or secure any means of harm from your environment.",
+      title: 'Remove Means',
+      description:
+        "If you're having thoughts of self-harm, remove or secure any means of harm from your environment.",
       icon: <PhoneIcon className="h-5 w-5" />,
     },
   ]
@@ -75,15 +79,15 @@ export default function EmergencyPage() {
         <div className="max-w-4xl mx-auto">
           <CrisisAlert
             className="mb-12"
-            onCallHotline={() => window.open("tel:988")}
-            onGetResources={() => (window.location.href = "/tools")}
+            onCallHotline={() => window.open('tel:988')}
+            onGetResources={() => (window.location.href = '/tools')}
           />
 
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-balance mb-4">You Are Not Alone</h2>
             <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto">
-              If you're in crisis or having thoughts of self-harm, please reach out for help immediately. These
-              resources are available 24/7.
+              If you're in crisis or having thoughts of self-harm, please reach out for help
+              immediately. These resources are available 24/7.
             </p>
           </div>
 
@@ -107,7 +111,9 @@ export default function EmergencyPage() {
 
           {/* Immediate Coping Strategies */}
           <div className="mb-16">
-            <h3 className="text-2xl font-bold text-center text-balance mb-8">Immediate Coping Strategies</h3>
+            <h3 className="text-2xl font-bold text-center text-balance mb-8">
+              Immediate Coping Strategies
+            </h3>
             <div className="grid gap-6 md:grid-cols-2">
               {copingStrategies.map((strategy, index) => (
                 <Card key={index}>
@@ -116,7 +122,9 @@ export default function EmergencyPage() {
                       {strategy.icon}
                       {strategy.title}
                     </CardTitle>
-                    <CardDescription className="text-pretty">{strategy.description}</CardDescription>
+                    <CardDescription className="text-pretty">
+                      {strategy.description}
+                    </CardDescription>
                   </CardHeader>
                 </Card>
               ))}
@@ -184,7 +192,8 @@ export default function EmergencyPage() {
                   <div>
                     <h4 className="font-semibold">Contact Professional Help</h4>
                     <p className="text-sm text-muted-foreground">
-                      Know how to reach crisis services, mental health professionals, or emergency services.
+                      Know how to reach crisis services, mental health professionals, or emergency
+                      services.
                     </p>
                   </div>
                 </div>
@@ -196,14 +205,15 @@ export default function EmergencyPage() {
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-4">Ready to Continue Your Journey?</h3>
             <p className="text-muted-foreground mb-6">
-              When you're ready, MindSpace is here to support your ongoing mental health and wellness.
+              When you're ready, MindSpace is here to support your ongoing mental health and
+              wellness.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
                 <a href="/dashboard">Return to Dashboard</a>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <a href={isSignedIn ? "/chat" : "/sign-in"}>Start AI Chat</a>
+                <a href={isSignedIn ? '/chat' : '/sign-in'}>Start AI Chat</a>
               </Button>
             </div>
           </div>

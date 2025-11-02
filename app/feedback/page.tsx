@@ -1,16 +1,22 @@
-"use client"
+'use client'
 
-import { useCallback, useEffect, useRef, useState, type ChangeEvent, type FormEvent } from "react"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MessageSquare, Star, Mail, User, CheckCircle2, Lightbulb, Sparkles } from "lucide-react"
-import { FEEDBACK_CATEGORIES } from "@/lib/constants/home"
+import { motion } from 'framer-motion'
+import { CheckCircle2, Lightbulb, Mail, MessageSquare, Sparkles, Star, User } from 'lucide-react'
+import { type ChangeEvent, type FormEvent, useCallback, useEffect, useRef, useState } from 'react'
+import { NavBar } from '@/components/layout/navbar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { FEEDBACK_CATEGORIES } from '@/lib/constants/home'
 
 type FullFeedbackFormData = {
   name: string
@@ -27,20 +33,20 @@ type FeedbackRatingOption = {
 }
 
 const INITIAL_FORM_STATE: FullFeedbackFormData = {
-  name: "",
-  email: "",
-  category: "",
-  rating: "",
-  subject: "",
-  message: "",
+  name: '',
+  email: '',
+  category: '',
+  rating: '',
+  subject: '',
+  message: '',
 }
 
 const FEEDBACK_RATING_OPTIONS: FeedbackRatingOption[] = [
-  { value: "5", label: "⭐⭐⭐⭐⭐ Excellent" },
-  { value: "4", label: "⭐⭐⭐⭐ Good" },
-  { value: "3", label: "⭐⭐⭐ Average" },
-  { value: "2", label: "⭐⭐ Poor" },
-  { value: "1", label: "⭐ Very Poor" },
+  { value: '5', label: '⭐⭐⭐⭐⭐ Excellent' },
+  { value: '4', label: '⭐⭐⭐⭐ Good' },
+  { value: '3', label: '⭐⭐⭐ Average' },
+  { value: '2', label: '⭐⭐ Poor' },
+  { value: '1', label: '⭐ Very Poor' },
 ]
 
 export default function FeedbackPage() {
@@ -62,37 +68,40 @@ export default function FeedbackPage() {
         const { value } = event.target
         setFormData((prev) => ({ ...prev, [field]: value }))
       },
-    []
+    [],
   )
 
   const handleSelectChange = useCallback(
     (field: keyof FullFeedbackFormData) => (value: string) => {
       setFormData((prev) => ({ ...prev, [field]: value }))
     },
-    []
+    [],
   )
 
-  const handleSubmit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
+  const handleSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
 
-      // TODO: integrate with backend feedback endpoint
-      setIsSubmitted(true)
+    // TODO: integrate with backend feedback endpoint
+    setIsSubmitted(true)
 
-      if (resetTimeoutRef.current) {
-        clearTimeout(resetTimeoutRef.current)
-      }
+    if (resetTimeoutRef.current) {
+      clearTimeout(resetTimeoutRef.current)
+    }
 
-      resetTimeoutRef.current = setTimeout(() => {
-        setIsSubmitted(false)
-        setFormData(() => ({ ...INITIAL_FORM_STATE }))
-        resetTimeoutRef.current = null
-      }, 3000)
-    },
-    []
-  )
+    resetTimeoutRef.current = setTimeout(() => {
+      setIsSubmitted(false)
+      setFormData(() => ({ ...INITIAL_FORM_STATE }))
+      resetTimeoutRef.current = null
+    }, 3000)
+  }, [])
 
-  const isFormValid = formData.name && formData.email && formData.category && formData.rating && formData.subject && formData.message
+  const isFormValid =
+    formData.name &&
+    formData.email &&
+    formData.category &&
+    formData.rating &&
+    formData.subject &&
+    formData.message
 
   return (
     <>
@@ -112,8 +121,8 @@ export default function FeedbackPage() {
               Share Your <span className="text-[#090847be]">Feedback</span>
             </h1>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Your feedback helps us improve MindSpace and provide better mental health support. 
-              We value your thoughts, suggestions, and experiences.
+              Your feedback helps us improve MindSpace and provide better mental health support. We
+              value your thoughts, suggestions, and experiences.
             </p>
           </motion.div>
 
@@ -157,7 +166,8 @@ export default function FeedbackPage() {
                     </div>
                     <h3 className="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
                     <p className="text-slate-600">
-                      Your feedback has been submitted successfully. We appreciate you taking the time to help us improve.
+                      Your feedback has been submitted successfully. We appreciate you taking the
+                      time to help us improve.
                     </p>
                   </div>
                 ) : (
@@ -175,7 +185,7 @@ export default function FeedbackPage() {
                         type="text"
                         placeholder="John Doe"
                         value={formData.name}
-                        onChange={handleInputChange("name")}
+                        onChange={handleInputChange('name')}
                         required
                       />
                     </div>
@@ -191,10 +201,12 @@ export default function FeedbackPage() {
                         type="email"
                         placeholder="john@example.com"
                         value={formData.email}
-                        onChange={handleInputChange("email")}
+                        onChange={handleInputChange('email')}
                         required
                       />
-                      <p className="text-xs text-slate-500">We'll only use this to follow up on your feedback if needed</p>
+                      <p className="text-xs text-slate-500">
+                        We'll only use this to follow up on your feedback if needed
+                      </p>
                     </div>
 
                     {/* Category */}
@@ -203,9 +215,9 @@ export default function FeedbackPage() {
                         <MessageSquare className="w-4 h-4" />
                         Feedback Category
                       </Label>
-                      <Select 
+                      <Select
                         value={formData.category}
-                        onValueChange={handleSelectChange("category")}
+                        onValueChange={handleSelectChange('category')}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select a category" />
@@ -229,10 +241,7 @@ export default function FeedbackPage() {
                         <Star className="w-4 h-4" />
                         Overall Experience Rating
                       </Label>
-                      <Select 
-                        value={formData.rating}
-                        onValueChange={handleSelectChange("rating")}
-                      >
+                      <Select value={formData.rating} onValueChange={handleSelectChange('rating')}>
                         <SelectTrigger>
                           <SelectValue placeholder="Rate your experience" />
                         </SelectTrigger>
@@ -248,29 +257,25 @@ export default function FeedbackPage() {
 
                     {/* Subject */}
                     <div className="space-y-2">
-                      <Label htmlFor="subject">
-                        Subject
-                      </Label>
+                      <Label htmlFor="subject">Subject</Label>
                       <Input
                         id="subject"
                         type="text"
                         placeholder="Brief summary of your feedback"
                         value={formData.subject}
-                        onChange={handleInputChange("subject")}
+                        onChange={handleInputChange('subject')}
                         required
                       />
                     </div>
 
                     {/* Message */}
                     <div className="space-y-2">
-                      <Label htmlFor="message">
-                        Your Feedback
-                      </Label>
+                      <Label htmlFor="message">Your Feedback</Label>
                       <Textarea
                         id="message"
                         placeholder="Please share your thoughts, suggestions, or report any issues in detail..."
                         value={formData.message}
-                        onChange={handleInputChange("message")}
+                        onChange={handleInputChange('message')}
                         rows={6}
                         required
                       />
@@ -278,8 +283,8 @@ export default function FeedbackPage() {
                     </div>
 
                     {/* Submit Button */}
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 text-lg"
                       disabled={!isFormValid}
                     >
@@ -336,7 +341,9 @@ export default function FeedbackPage() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-12"
           >
-            <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">Other Ways to Reach Us</h2>
+            <h2 className="text-2xl font-bold text-slate-900 mb-6 text-center">
+              Other Ways to Reach Us
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-white border border-slate-200 shadow hover:shadow-lg transition-all">
                 <CardContent className="p-6">
@@ -349,7 +356,10 @@ export default function FeedbackPage() {
                       <p className="text-sm text-slate-600 mb-2">
                         For detailed feedback or inquiries, send us an email
                       </p>
-                      <a href="mailto:feedback@mindspace.com" className="text-sm text-indigo-600 hover:underline">
+                      <a
+                        href="mailto:feedback@mindspace.com"
+                        className="text-sm text-indigo-600 hover:underline"
+                      >
                         feedback@mindspace.com
                       </a>
                     </div>

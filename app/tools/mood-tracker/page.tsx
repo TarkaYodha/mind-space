@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { MoodTracker } from "@/components/tools/mood-tracker"
-import { NavBar } from "@/components/layout/navbar"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Sparkles, ArrowLeft } from "lucide-react"
+import { motion } from 'framer-motion'
+import { ArrowLeft, Heart, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+import { NavBar } from '@/components/layout/navbar'
+import { MoodTracker } from '@/components/tools/mood-tracker'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 
 export default function MoodTrackerPage() {
   return (
@@ -22,11 +22,7 @@ export default function MoodTrackerPage() {
             animate={{ opacity: 1, x: 0 }}
             className="mb-8"
           >
-            <Button
-              variant="ghost"
-              asChild
-              className="mb-4"
-            >
+            <Button variant="ghost" asChild className="mb-4">
               <Link href="/tools">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Tools
@@ -50,11 +46,11 @@ export default function MoodTrackerPage() {
               <Badge className="bg-[#001f4d] text-white hover:bg-[#001437]">Daily Tool</Badge>
             </div>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Track your daily mood and emotions to identify patterns and triggers over time. 
+              Track your daily mood and emotions to identify patterns and triggers over time.
               Understanding your emotional patterns is the first step to better mental health.
             </p>
           </motion.div>
-          
+
           {/* Quick Tips */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -71,12 +67,13 @@ export default function MoodTrackerPage() {
                   Pro Tip: Track consistently for better insights
                 </h3>
                 <p className="text-blue-700">
-                  Try to log your mood at the same time each day. Even tracking for a week can reveal helpful patterns.
+                  Try to log your mood at the same time each day. Even tracking for a week can
+                  reveal helpful patterns.
                 </p>
               </div>
             </div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}

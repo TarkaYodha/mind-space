@@ -1,109 +1,117 @@
-"use client"
+'use client'
 
-import { NavBar } from "@/components/layout/navbar"
-import { Footer } from "@/components/layout/footer"
-import { TypographyH1, TypographyH2, TypographyP } from "@/components/ui/typography"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeftIcon, BookOpenIcon, ClockIcon, BrainIcon, HeartIcon, UsersIcon, SparklesIcon } from "lucide-react"
-import Link from "next/link"
+import {
+  ArrowLeftIcon,
+  BookOpenIcon,
+  BrainIcon,
+  ClockIcon,
+  HeartIcon,
+  SparklesIcon,
+  UsersIcon,
+} from 'lucide-react'
+import Link from 'next/link'
+import { Footer } from '@/components/layout/footer'
+import { NavBar } from '@/components/layout/navbar'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { TypographyH1, TypographyH2, TypographyP } from '@/components/ui/typography'
 
 export default function ArticlesPage() {
   const articles = [
     {
-      title: "Anxiety Management for Students",
-      description: "Learn practical strategies to manage anxiety and academic pressure in college.",
-      href: "/resources/articles/anxiety-management-for-students",
-      category: "Mental Health",
-      readTime: "8 min read",
+      title: 'Anxiety Management for Students',
+      description: 'Learn practical strategies to manage anxiety and academic pressure in college.',
+      href: '/resources/articles/anxiety-management-for-students',
+      category: 'Mental Health',
+      readTime: '8 min read',
       icon: BrainIcon,
     },
     {
-      title: "Depression in College Students",
-      description: "Understanding depression, recognizing symptoms, and finding support.",
-      href: "/resources/articles/depression-in-college-students",
-      category: "Mental Health",
-      readTime: "10 min read",
+      title: 'Depression in College Students',
+      description: 'Understanding depression, recognizing symptoms, and finding support.',
+      href: '/resources/articles/depression-in-college-students',
+      category: 'Mental Health',
+      readTime: '10 min read',
       icon: HeartIcon,
     },
     {
-      title: "Stress and Time Management",
-      description: "Effective techniques for managing stress and balancing your college workload.",
-      href: "/resources/articles/stress-and-time-management",
-      category: "Academic",
-      readTime: "12 min read",
+      title: 'Stress and Time Management',
+      description: 'Effective techniques for managing stress and balancing your college workload.',
+      href: '/resources/articles/stress-and-time-management',
+      category: 'Academic',
+      readTime: '12 min read',
       icon: ClockIcon,
     },
     {
-      title: "Building Support Networks",
-      description: "How to create and maintain meaningful connections in college.",
-      href: "/resources/articles/building-support-networks",
-      category: "Social",
-      readTime: "9 min read",
+      title: 'Building Support Networks',
+      description: 'How to create and maintain meaningful connections in college.',
+      href: '/resources/articles/building-support-networks',
+      category: 'Social',
+      readTime: '9 min read',
       icon: UsersIcon,
     },
     {
-      title: "Mindfulness and Meditation",
-      description: "Introduction to mindfulness practices for mental wellness.",
-      href: "/resources/articles/mindfulness-and-meditation",
-      category: "Wellness",
-      readTime: "11 min read",
+      title: 'Mindfulness and Meditation',
+      description: 'Introduction to mindfulness practices for mental wellness.',
+      href: '/resources/articles/mindfulness-and-meditation',
+      category: 'Wellness',
+      readTime: '11 min read',
       icon: SparklesIcon,
     },
     {
-      title: "Breathing Techniques for Anxiety",
-      description: "Simple breathing exercises to calm anxiety and reduce stress.",
-      href: "/resources/articles/breathing-techniques-for-anxiety",
-      category: "Wellness",
-      readTime: "6 min read",
+      title: 'Breathing Techniques for Anxiety',
+      description: 'Simple breathing exercises to calm anxiety and reduce stress.',
+      href: '/resources/articles/breathing-techniques-for-anxiety',
+      category: 'Wellness',
+      readTime: '6 min read',
       icon: SparklesIcon,
     },
     {
-      title: "Grounding Techniques for Crisis",
-      description: "Quick grounding methods to manage overwhelming emotions and panic.",
-      href: "/resources/articles/grounding-techniques-for-crisis",
-      category: "Crisis Support",
-      readTime: "7 min read",
+      title: 'Grounding Techniques for Crisis',
+      description: 'Quick grounding methods to manage overwhelming emotions and panic.',
+      href: '/resources/articles/grounding-techniques-for-crisis',
+      category: 'Crisis Support',
+      readTime: '7 min read',
       icon: HeartIcon,
     },
     {
-      title: "Dealing with Loneliness",
-      description: "Understanding loneliness in college and strategies to combat it.",
-      href: "/resources/articles/dealing-with-loneliness",
-      category: "Social",
-      readTime: "10 min read",
+      title: 'Dealing with Loneliness',
+      description: 'Understanding loneliness in college and strategies to combat it.',
+      href: '/resources/articles/dealing-with-loneliness',
+      category: 'Social',
+      readTime: '10 min read',
       icon: UsersIcon,
     },
     {
-      title: "Healthy Communication",
-      description: "Building better relationships through effective communication skills.",
-      href: "/resources/articles/healthy-communication",
-      category: "Social",
-      readTime: "9 min read",
+      title: 'Healthy Communication',
+      description: 'Building better relationships through effective communication skills.',
+      href: '/resources/articles/healthy-communication',
+      category: 'Social',
+      readTime: '9 min read',
       icon: UsersIcon,
     },
     {
-      title: "Work-Life Balance in College",
-      description: "Strategies for maintaining balance between academics, work, and personal life.",
-      href: "/resources/articles/work-life-balance-in-college",
-      category: "Academic",
-      readTime: "11 min read",
+      title: 'Work-Life Balance in College',
+      description: 'Strategies for maintaining balance between academics, work, and personal life.',
+      href: '/resources/articles/work-life-balance-in-college',
+      category: 'Academic',
+      readTime: '11 min read',
       icon: ClockIcon,
     },
     {
-      title: "Study Stress Management",
-      description: "Techniques to reduce study-related stress and improve focus.",
-      href: "/resources/articles/study-stress-management",
-      category: "Academic",
-      readTime: "10 min read",
+      title: 'Study Stress Management',
+      description: 'Techniques to reduce study-related stress and improve focus.',
+      href: '/resources/articles/study-stress-management',
+      category: 'Academic',
+      readTime: '10 min read',
       icon: BookOpenIcon,
     },
     {
-      title: "Academic Accommodations",
-      description: "Understanding your rights and how to access academic accommodations.",
-      href: "/resources/articles/academic-accommodations",
-      category: "Academic",
-      readTime: "13 min read",
+      title: 'Academic Accommodations',
+      description: 'Understanding your rights and how to access academic accommodations.',
+      href: '/resources/articles/academic-accommodations',
+      category: 'Academic',
+      readTime: '13 min read',
       icon: BookOpenIcon,
     },
   ]
@@ -114,7 +122,7 @@ export default function ArticlesPage() {
   return (
     <>
       <NavBar />
-      
+
       <div className="min-h-screen bg-background">
         {/* Header Section */}
         <section className="py-16 bg-gradient-to-b from-muted/30 to-background">
@@ -132,8 +140,9 @@ export default function ArticlesPage() {
             <div className="max-w-3xl">
               <TypographyH1 className="mb-4">Mental Health Articles</TypographyH1>
               <TypographyP className="text-lg text-muted-foreground">
-                Explore our comprehensive collection of articles covering mental health, wellness, and student life. 
-                Each article provides evidence-based strategies and practical tips to support your well-being.
+                Explore our comprehensive collection of articles covering mental health, wellness,
+                and student life. Each article provides evidence-based strategies and practical tips
+                to support your well-being.
               </TypographyP>
             </div>
           </div>

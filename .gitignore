@@ -3,6 +3,14 @@ node_modules/
 /.pnp
 .pnp.js
 
+# npm/yarn (not used - we use Bun)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.npmrc
+.yarnrc
+.nvmrc
+
 # testing
 /coverage
 
@@ -21,6 +29,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+bun-debug.log*
 
 # local env files
 .env*.local
@@ -28,6 +37,11 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
 
 # typescript
 *.tsbuildinfo

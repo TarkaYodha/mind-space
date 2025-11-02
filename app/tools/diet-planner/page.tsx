@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { DietPlannerInterface } from '@/components/tools/diet-planner';
-import { NavBar } from '@/components/layout/navbar';
+import { NavBar } from '@/components/layout/navbar'
+import { DietPlannerInterface } from '@/components/tools/diet-planner'
 
 export default function DietPlannerPage() {
   return (
@@ -11,5 +11,5 @@ export default function DietPlannerPage() {
         <DietPlannerInterface />
       </div>
     </>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { AlertTriangle, Phone, MessageCircle, HeartIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { AlertTriangle, HeartIcon, MessageCircle, Phone } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 
 interface CrisisAlertProps {
   className?: string
@@ -13,7 +13,7 @@ interface CrisisAlertProps {
 
 export function CrisisAlert({ className, onCallHotline, onGetResources }: CrisisAlertProps) {
   return (
-    <Card className={cn("border-destructive bg-destructive/5 shadow-large", className)}>
+    <Card className={cn('border-destructive bg-destructive/5 shadow-large', className)}>
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
@@ -26,8 +26,8 @@ export function CrisisAlert({ className, onCallHotline, onGetResources }: Crisis
               Crisis Support Available 24/7
             </h3>
             <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-              If you're having thoughts of self-harm or are in immediate danger, please reach out for help right now.
-              You are not alone, and support is available.
+              If you're having thoughts of self-harm or are in immediate danger, please reach out
+              for help right now. You are not alone, and support is available.
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
@@ -69,7 +69,7 @@ export function CrisisButton({ className, onCallHotline, onClick }: CrisisButton
     } else if (onCallHotline) {
       onCallHotline()
     } else {
-      window.open("tel:988")
+      window.open('tel:988')
     }
   }
 
@@ -79,14 +79,14 @@ export function CrisisButton({ className, onCallHotline, onClick }: CrisisButton
       size="lg"
       onClick={handleClick}
       className={cn(
-        "fixed z-50 shadow-large hover:shadow-xl transition-all duration-200",
-        "bottom-6 right-6",
-        "bg-red-600 hover:bg-red-700 focus:bg-red-700",
-        "text-white font-semibold",
-        "px-6 py-3 rounded-xl",
-        "hover:scale-105 active:scale-95",
-        "focus-visible:ring-4 focus-visible:ring-red-500/50",
-        className
+        'fixed z-50 shadow-large hover:shadow-xl transition-all duration-200',
+        'bottom-6 right-6',
+        'bg-red-600 hover:bg-red-700 focus:bg-red-700',
+        'text-white font-semibold',
+        'px-6 py-3 rounded-xl',
+        'hover:scale-105 active:scale-95',
+        'focus-visible:ring-4 focus-visible:ring-red-500/50',
+        className,
       )}
       aria-label="Get immediate crisis help - Call 988"
     >

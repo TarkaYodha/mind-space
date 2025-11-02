@@ -1,10 +1,19 @@
-"use client"
+'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog'
+import { Mic, MicOff, Trash2, Volume2, VolumeX } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { SendIcon } from '@/components/ui/icons'
-import { Trash2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { trpc } from '@/lib/trpc/client'
 
 interface Message {
   id: string
@@ -26,11 +35,53 @@ export function ChatInterface() {
   const [voiceEnabled, setVoiceEnabled] = useState(true)
   const [speechRate, setSpeechRate] = useState(0.85)
   const [showVoiceSettings, setShowVoiceSettings] = useState(false)
+  const [sessionId] = useState(() => crypto.randomUUID()) // Generate session ID once
   const scrollRef = useRef<HTMLDivElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const synthRef = useRef<any>(null)
+
+  // tRPC mutation for sending messages
+  const sendMessageMutation = trpc.chat.sendMessage.useMutation({
+    onSuccess: (data) => {
+      const aiResponse: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: data.response,
+        timestamp: new Date(),
+        isHighRisk: data.hasCrisisContent,
+      }
+
+      setMessages((prev) => [...prev, aiResponse])
+
+      // Show crisis alert if detected
+      if (data.hasCrisisContent) {
+        setShowCrisisAlert(true)
+      }
+
+      // Speak the AI response if voice is enabled
+      if (voiceEnabled && data.response) {
+        speakText(data.response)
+      }
+
+      setIsTyping(false)
+    },
+    onError: (error) => {
+      console.error('Error sending message:', error)
+      
+      // Add fallback error message
+      const errorResponse: Message = {
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: "I'm sorry, I'm having trouble connecting right now. If you're in crisis, please call 988 or visit the emergency page for immediate help.",
+        timestamp: new Date(),
+      }
+      
+      setMessages((prev) => [...prev, errorResponse])
+      setIsTyping(false)
+    },
+  })
 
   useEffect(() => {
     loadChatHistory()
@@ -48,8 +99,9 @@ export function ChatInterface() {
     if (typeof window !== 'undefined') {
       // Check for speech recognition support
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
-      
+      const SpeechRecognition =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition()
         recognitionRef.current.continuous = false
@@ -136,10 +188,10 @@ export function ChatInterface() {
       }
 
       // Optimized settings for clarity
-      utterance.rate = speechRate  // User-adjustable speech rate
-      utterance.pitch = 0.95       // Slightly lower pitch for natural sound
-      utterance.volume = 1         // Full volume
-      utterance.lang = 'en-US'     // Explicit language setting
+      utterance.rate = speechRate // User-adjustable speech rate
+      utterance.pitch = 0.95 // Slightly lower pitch for natural sound
+      utterance.volume = 1 // Full volume
+      utterance.lang = 'en-US' // Explicit language setting
 
       utterance.onstart = () => {
         setIsSpeaking(true)
@@ -166,21 +218,21 @@ export function ChatInterface() {
     let cleanedText = text
 
     // Remove or replace problematic characters and formatting
-    cleanedText = cleanedText.replace(/\*\*/g, '')          // Remove markdown bold
-    cleanedText = cleanedText.replace(/\*/g, '')            // Remove markdown italic
-    cleanedText = cleanedText.replace(/`/g, '')             // Remove code backticks
-    cleanedText = cleanedText.replace(/#{1,6}\s/g, '')      // Remove markdown headers
-    cleanedText = cleanedText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')  // Convert links to just text
+    cleanedText = cleanedText.replace(/\*\*/g, '') // Remove markdown bold
+    cleanedText = cleanedText.replace(/\*/g, '') // Remove markdown italic
+    cleanedText = cleanedText.replace(/`/g, '') // Remove code backticks
+    cleanedText = cleanedText.replace(/#{1,6}\s/g, '') // Remove markdown headers
+    cleanedText = cleanedText.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Convert links to just text
 
     // Improve pronunciation of common terms
-    cleanedText = cleanedText.replace(/\bAI\b/g, 'A I')     // Spell out AI
-    cleanedText = cleanedText.replace(/\bAPI\b/g, 'A P I')  // Spell out API
-    cleanedText = cleanedText.replace(/\bURL\b/g, 'U R L')  // Spell out URL
+    cleanedText = cleanedText.replace(/\bAI\b/g, 'A I') // Spell out AI
+    cleanedText = cleanedText.replace(/\bAPI\b/g, 'A P I') // Spell out API
+    cleanedText = cleanedText.replace(/\bURL\b/g, 'U R L') // Spell out URL
 
     // Add pauses for better pacing
-    cleanedText = cleanedText.replace(/\. /g, '. ')         // Ensure space after periods
-    cleanedText = cleanedText.replace(/\? /g, '? ')         // Ensure space after questions
-    cleanedText = cleanedText.replace(/! /g, '! ')          // Ensure space after exclamations
+    cleanedText = cleanedText.replace(/\. /g, '. ') // Ensure space after periods
+    cleanedText = cleanedText.replace(/\? /g, '? ') // Ensure space after questions
+    cleanedText = cleanedText.replace(/! /g, '! ') // Ensure space after exclamations
 
     // Replace common abbreviations with full words
     cleanedText = cleanedText.replace(/\be\.g\./g, 'for example')
@@ -195,35 +247,35 @@ export function ChatInterface() {
     if (!voices.length) return null
 
     // Prefer English voices
-    const englishVoices = voices.filter(voice =>
-      voice.lang.startsWith('en-') && voice.localService
+    const englishVoices = voices.filter(
+      (voice) => voice.lang.startsWith('en-') && voice.localService,
     )
 
     // Priority order for voice selection
     const preferredNames = [
-      'Samantha',      // macOS high quality
-      'Alex',          // macOS natural
-      'Karen',         // Windows natural
-      'Hazel',         // macOS UK English
-      'Daniel',        // macOS UK English male
-      'Zira',          // Windows female
-      'David',         // Windows male
+      'Samantha', // macOS high quality
+      'Alex', // macOS natural
+      'Karen', // Windows natural
+      'Hazel', // macOS UK English
+      'Daniel', // macOS UK English male
+      'Zira', // Windows female
+      'David', // Windows male
       'Google US English', // Chrome/Android
       'Microsoft Aria Online', // Edge/Windows
     ]
 
     // Try to find preferred voices
     for (const preferredName of preferredNames) {
-      const voice = englishVoices.find(v => v.name.includes(preferredName))
+      const voice = englishVoices.find((v) => v.name.includes(preferredName))
       if (voice) return voice
     }
 
     // Fallback to first local English voice
-    const localEnglishVoice = englishVoices.find(voice => voice.localService)
+    const localEnglishVoice = englishVoices.find((voice) => voice.localService)
     if (localEnglishVoice) return localEnglishVoice
 
     // Fallback to any English voice
-    const anyEnglishVoice = voices.find(voice => voice.lang.startsWith('en-'))
+    const anyEnglishVoice = voices.find((voice) => voice.lang.startsWith('en-'))
     if (anyEnglishVoice) return anyEnglishVoice
 
     // Last resort: first available voice
@@ -245,7 +297,7 @@ export function ChatInterface() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const parsedMessages = JSON.parse(savedMessages).map((msg: any) => ({
         ...msg,
-        timestamp: new Date(msg.timestamp)
+        timestamp: new Date(msg.timestamp),
       }))
       setMessages(parsedMessages)
     }
@@ -263,7 +315,7 @@ export function ChatInterface() {
 
   async function handleSendMessage(e: React.FormEvent) {
     e.preventDefault()
-    if (!input.trim()) return
+    if (!input.trim() || sendMessageMutation.isPending) return
 
     const newMessage: Message = {
       id: crypto.randomUUID(),
@@ -272,82 +324,15 @@ export function ChatInterface() {
       timestamp: new Date(),
     }
 
-    setMessages(prev => [...prev, newMessage])
+    setMessages((prev) => [...prev, newMessage])
     setInput('')
     setIsTyping(true)
 
-    try {
-      // Send message to AI service
-      const response = await processMessage(newMessage.content)
-
-      // Check for crisis keywords locally as backup
-      const isCrisis = detectCrisis(newMessage.content)
-      if (isCrisis) {
-        setShowCrisisAlert(true)
-      }
-
-      const aiResponse: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: response,
-        timestamp: new Date(),
-        isHighRisk: isCrisis
-      }
-
-      setMessages(prev => [...prev, aiResponse])
-
-      // Speak the AI response if voice is enabled
-      if (voiceEnabled && response) {
-        speakText(response)
-      }
-
-      // Save conversation to localStorage instead of Supabase
-      const updatedMessages = [...messages, newMessage, aiResponse]
-      localStorage.setItem('chat-history', JSON.stringify(updatedMessages))
-    } catch (error) {
-      console.error('Error processing message:', error)
-    } finally {
-      setIsTyping(false)
-    }
-  }
-
-  async function processMessage(content: string): Promise<string> {
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: content }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to get AI response')
-      }
-
-      const data = await response.json()
-
-      // Show crisis alert if AI detected crisis content
-      if (data.hasCrisisContent) {
-        setShowCrisisAlert(true)
-      }
-
-      return data.response
-    } catch (error) {
-      console.error('Error calling AI API:', error)
-      // Fallback response if API fails
-      return "I'm sorry, I'm having trouble connecting right now. If you're in crisis, please call 988 or visit the emergency page for immediate help."
-    }
-  }
-
-  function detectCrisis(content: string): boolean {
-    const crisisKeywords = [
-      'suicide', 'kill myself', 'end it all', 'want to die',
-      'self-harm', 'hurt myself', 'give up', 'no reason to live'
-    ]
-    return crisisKeywords.some(keyword =>
-      content.toLowerCase().includes(keyword.toLowerCase())
-    )
+    // Send message using tRPC
+    sendMessageMutation.mutate({
+      message: newMessage.content,
+      sessionId: sessionId,
+    })
   }
 
   return (
@@ -356,7 +341,9 @@ export function ChatInterface() {
       <div className="flex justify-between items-center mb-6 pb-4 border-b border-indigo-200">
         <div>
           <h2 className="text-xl font-semibold text-slate-800">AI Mental Health Assistant</h2>
-          <p className="text-sm text-slate-500 mt-1">Share your thoughts safely and get personalized support</p>
+          <p className="text-sm text-slate-500 mt-1">
+            Share your thoughts safely and get personalized support
+          </p>
         </div>
         {messages.length > 0 && (
           <button
@@ -376,22 +363,33 @@ export function ChatInterface() {
             {messages.length === 0 && (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-indigo-100 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                  <svg
+                    className="w-8 h-8 text-indigo-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                    ></path>
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold text-slate-800 mb-2">Welcome to MindSpace AI Chat</h3>
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">
+                  Welcome to MindSpace AI Chat
+                </h3>
                 <p className="text-slate-600 max-w-md mx-auto">
-                  I'm here to listen and support you. Share what's on your mind, ask questions, or just talk about how you're feeling today.
+                  I'm here to listen and support you. Share what's on your mind, ask questions, or
+                  just talk about how you're feeling today.
                 </p>
               </div>
             )}
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
                   className={`max-w-[80%] rounded-2xl p-4 shadow-sm ${
@@ -405,12 +403,19 @@ export function ChatInterface() {
                     <div className="flex-1">
                       {message.role === 'user' && (
                         <div className="text-xs text-blue-200 opacity-75">
-                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          {message.timestamp.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </div>
                       )}
                       {message.role === 'assistant' && (
                         <div className="text-xs text-slate-400">
-                          AI Assistant • {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          AI Assistant •{' '}
+                          {message.timestamp.toLocaleTimeString([], {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
                         </div>
                       )}
                     </div>
@@ -494,7 +499,8 @@ export function ChatInterface() {
       ) : (
         <div className="text-center mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
           <p className="text-sm text-yellow-800">
-            🎤 Voice features are not supported in this browser. Please use a modern browser like Chrome, Edge, or Safari for voice functionality.
+            🎤 Voice features are not supported in this browser. Please use a modern browser like
+            Chrome, Edge, or Safari for voice functionality.
           </p>
         </div>
       )}
@@ -525,7 +531,11 @@ export function ChatInterface() {
             </div>
             <div className="flex gap-2 pt-2">
               <button
-                onClick={() => speakText("This is a test of the speech quality. The AI assistant is now speaking more clearly with improved settings.")}
+                onClick={() =>
+                  speakText(
+                    'This is a test of the speech quality. The AI assistant is now speaking more clearly with improved settings.',
+                  )
+                }
                 disabled={isSpeaking}
                 className="flex-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50"
               >
@@ -567,7 +577,11 @@ export function ChatInterface() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={isListening ? "Listening for your voice..." : "Type your message... (Press Enter to send)"}
+            placeholder={
+              isListening
+                ? 'Listening for your voice...'
+                : 'Type your message... (Press Enter to send)'
+            }
             className={`w-full px-4 py-3 border border-indigo-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white text-slate-800 placeholder-slate-400 ${
               isListening ? 'bg-blue-50 border-blue-300' : ''
             }`}
@@ -590,11 +604,11 @@ export function ChatInterface() {
         </div>
         <button
           type="submit"
-          disabled={!input.trim() || isTyping || isListening}
+          disabled={!input.trim() || isTyping || isListening || sendMessageMutation.isPending}
           className="px-6 py-3 bg-[#001f4d] text-white rounded-xl font-medium hover:bg-[#001437] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
         >
           <SendIcon className="h-4 w-4" />
-          Send
+          {sendMessageMutation.isPending ? 'Sending...' : 'Send'}
         </button>
       </form>
 
@@ -603,12 +617,13 @@ export function ChatInterface() {
           <AlertDialogHeader>
             <AlertDialogTitle>Would you like to talk to someone right now?</AlertDialogTitle>
             <AlertDialogDescription>
-              We've detected that you might be in crisis. We have crisis resources and professional help available 24/7 to help you through this.
+              We've detected that you might be in crisis. We have crisis resources and professional
+              help available 24/7 to help you through this.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex justify-end gap-2">
             <AlertDialogCancel>Continue with AI Chat</AlertDialogCancel>
-            <AlertDialogAction onClick={() => window.location.href = '/emergency'}>
+            <AlertDialogAction onClick={() => (window.location.href = '/emergency')}>
               Get Crisis Resources
             </AlertDialogAction>
           </div>
@@ -625,7 +640,10 @@ export function ChatInterface() {
           </AlertDialogHeader>
           <div className="flex justify-end gap-2">
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={clearChat} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction
+              onClick={clearChat}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Clear Chat
             </AlertDialogAction>
           </div>

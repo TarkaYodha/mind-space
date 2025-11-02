@@ -1,12 +1,13 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from "framer-motion"
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { motion } from 'framer-motion'
+import { AlertTriangle, Brain, CheckCircle, Clock, Heart, Shield } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Label } from '@/components/ui/label'
-import { assessmentSeedData } from '@/lib/assessments/seed-data'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/hooks/use-toast'
-import { CheckCircle, AlertTriangle, Clock, Brain, Heart, Shield } from 'lucide-react'
+import { assessmentSeedData } from '@/lib/assessments/seed-data'
+import { trpc } from '@/lib/trpc/client'
 
 interface Question {
   id: number
@@ -55,25 +56,64 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<number, number>>({})
   const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
   const [result, setResult] = useState<AssessmentResult | null>(null)
-  
+
   const { toast } = useToast()
+
+  // tRPC hooks for database operations
+  const submitMutation = trpc.assessment.submit.useMutation({
+    onSuccess: (data) => {
+      toast({
+        title: 'Assessment Complete',
+        description: 'Your results have been saved',
+      })
+      // Set result from database response (data.result contains the assessment record)
+      const dbResult = data.result
+      
+      // Find interpretation from assessment seed data
+      const interpretation = assessment?.scoring_logic.ranges.find(
+        (range) => dbResult.score >= range.min && dbResult.score <= range.max,
+      )
+
+      setResult({
+        assessment_id: assessmentId,
+        responses: answers,
+        score: dbResult.score,
+        interpretation: interpretation?.interpretation,
+        severity: dbResult.severity,
+        recommendations: generateRecommendations(dbResult.score, dbResult.severity),
+        completed_at: dbResult.createdAt.toISOString(),
+      })
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to submit assessment',
+        variant: 'destructive',
+      })
+    },
+  })
+
+  // Load assessment history to show past results (optional - for future use)
+  const { data: history } = trpc.assessment.getHistory.useQuery(
+    { limit: 5, assessmentType: assessmentId as 'PHQ-9' | 'GAD-7' | 'PSS-10' | 'WHO-5' },
+    { enabled: false }, // Don't auto-fetch for now
+  )
 
   useEffect(() => {
     async function loadAssessment() {
       try {
         // Find assessment in seed data
-        const foundAssessment = assessmentSeedData.find(a => a.id === assessmentId)
+        const foundAssessment = assessmentSeedData.find((a) => a.id === assessmentId)
         if (!foundAssessment) {
           throw new Error('Assessment not found')
         }
         setAssessment(foundAssessment)
       } catch {
         toast({
-          title: "Error",
-          description: "Failed to load assessment",
-          variant: "destructive"
+          title: 'Error',
+          description: 'Failed to load assessment',
+          variant: 'destructive',
         })
       } finally {
         setLoading(false)
@@ -86,44 +126,31 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
   async function submitAssessment() {
     if (!assessment) return
 
-    setSubmitting(true)
     try {
       // Calculate score
       const score = Object.values(answers).reduce((sum, value) => sum + value, 0)
-      
-      // Find interpretation based on score
+
+      // Find severity based on score
       const interpretation = assessment.scoring_logic.ranges.find(
-        range => score >= range.min && score <= range.max
+        (range) => score >= range.min && score <= range.max,
       )
 
-      const assessmentResult = {
-        assessment_id: assessmentId,
-        responses: answers,
+      // Submit assessment using tRPC mutation
+      await submitMutation.mutateAsync({
+        assessmentType: assessmentId as 'PHQ-9' | 'GAD-7' | 'PSS-10' | 'WHO-5',
+        answers,
         score,
-        interpretation: interpretation?.interpretation,
-        severity: interpretation?.severity,
-        recommendations: generateRecommendations(score, interpretation?.severity),
-        completed_at: new Date().toISOString()
-      }
-
-      // Store result in localStorage for now (in production, this would go to database)
-      const existingResults = JSON.parse(localStorage.getItem('assessment_results') || '[]')
-      existingResults.push(assessmentResult)
-      localStorage.setItem('assessment_results', JSON.stringify(existingResults))
-
-      setResult(assessmentResult)
-      toast({
-        title: "Assessment Complete",
-        description: "Your results have been saved locally"
+        severity: (interpretation?.severity || 'minimal') as
+          | 'minimal'
+          | 'mild'
+          | 'moderate'
+          | 'moderately-severe'
+          | 'severe',
+        recommendations: generateRecommendations(score, interpretation?.severity).actions,
       })
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to submit assessment",
-        variant: "destructive"
-      })
-    } finally {
-      setSubmitting(false)
+    } catch (error) {
+      // Error handling done in mutation onError callback
+      console.error('Assessment submission error:', error)
     }
   }
 
@@ -132,7 +159,7 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
     const recommendations: AssessmentRecommendations = {
       resources: [],
       actions: [],
-      professional_help: false
+      professional_help: false,
     }
 
     if (severity === 'moderate' || severity === 'moderately_severe' || severity === 'severe') {
@@ -142,7 +169,10 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
 
     // Add relevant resources and self-help actions
     recommendations.resources.push('Mindfulness exercises', 'Stress management techniques')
-    recommendations.actions.push('Practice regular exercise', 'Maintain a consistent sleep schedule')
+    recommendations.actions.push(
+      'Practice regular exercise',
+      'Maintain a consistent sleep schedule',
+    )
 
     return recommendations
   }
@@ -175,7 +205,9 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
           <AlertTriangle className="h-8 w-8 text-red-600" />
         </div>
         <h3 className="text-lg font-semibold text-red-800 mb-2">Assessment Not Found</h3>
-        <p className="text-red-600">The requested assessment could not be loaded. Please try again.</p>
+        <p className="text-red-600">
+          The requested assessment could not be loaded. Please try again.
+        </p>
       </div>
     )
   }
@@ -185,28 +217,32 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
       if (!severity) return 'blue'
 
       switch (severity) {
-        case 'minimal': 
-        case 'low': 
+        case 'minimal':
+        case 'low':
         case 'no_burnout':
         case 'excellent_wellness':
-        case 'good_wellness': return 'green'
-        case 'mild': 
-        case 'moderate': 
+        case 'good_wellness':
+          return 'green'
+        case 'mild':
+        case 'moderate':
         case 'mild_burnout':
-        case 'moderate_wellness': return 'yellow'
-        case 'moderately_severe': 
-        case 'high': 
-        case 'severe': 
+        case 'moderate_wellness':
+          return 'yellow'
+        case 'moderately_severe':
+        case 'high':
+        case 'severe':
         case 'very_high':
         case 'moderate_burnout':
         case 'high_burnout':
-        case 'low_wellness': return 'red'
-        default: return 'blue'
+        case 'low_wellness':
+          return 'red'
+        default:
+          return 'blue'
       }
     }
 
-  const severityColor = getSeverityColor(result.severity)
-  const severityLabel = result.severity ? result.severity.replace('_', ' ') : 'Not available'
+    const severityColor = getSeverityColor(result.severity)
+    const severityLabel = result.severity ? result.severity.replace('_', ' ') : 'Not available'
 
     return (
       <motion.div
@@ -228,9 +264,13 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
         </div>
 
         {/* Interpretation */}
-        <div className={`bg-${severityColor}-50 border border-${severityColor}-200 rounded-2xl p-6`}>
+        <div
+          className={`bg-${severityColor}-50 border border-${severityColor}-200 rounded-2xl p-6`}
+        >
           <div className="flex items-center gap-3 mb-4">
-            <div className={`flex items-center justify-center w-12 h-12 rounded-xl bg-${severityColor}-100`}>
+            <div
+              className={`flex items-center justify-center w-12 h-12 rounded-xl bg-${severityColor}-100`}
+            >
               <Brain className={`h-6 w-6 text-${severityColor}-600`} />
             </div>
             <h3 className={`text-lg font-semibold text-${severityColor}-800`}>Your Results</h3>
@@ -253,11 +293,13 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-red-100">
                 <Heart className="h-6 w-6 text-red-600" />
               </div>
-              <h3 className="text-lg font-semibold text-red-800">Professional Support Recommended</h3>
+              <h3 className="text-lg font-semibold text-red-800">
+                Professional Support Recommended
+              </h3>
             </div>
             <p className="text-red-700 mb-4">
-              Based on your results, we recommend seeking professional support from a mental health professional. 
-              Remember, seeking help is a sign of strength, not weakness.
+              Based on your results, we recommend seeking professional support from a mental health
+              professional. Remember, seeking help is a sign of strength, not weakness.
             </p>
             <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
               Find Professional Help
@@ -346,15 +388,17 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
         </div>
         <h2 className="text-2xl font-extrabold text-slate-900 mb-2">{assessment.name}</h2>
         <p className="text-slate-600 mb-6">{assessment.description}</p>
-        
+
         {/* Progress */}
         <div className="max-w-md mx-auto">
           <div className="flex justify-between text-sm text-slate-600 mb-2">
             <span>Progress</span>
-            <span>{currentQuestionIndex + 1} of {assessment.questions.length}</span>
+            <span>
+              {currentQuestionIndex + 1} of {assessment.questions.length}
+            </span>
           </div>
           <div className="w-full bg-slate-200 rounded-full h-2">
-            <motion.div 
+            <motion.div
               className="bg-[#001f4d] h-2 rounded-full transition-all duration-300"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
@@ -384,9 +428,9 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
         <RadioGroup
           value={answers[currentQuestion.id]?.toString()}
           onValueChange={(value) => {
-            setAnswers(prev => ({
+            setAnswers((prev) => ({
               ...prev,
-              [currentQuestion.id]: parseInt(value)
+              [currentQuestion.id]: parseInt(value),
             }))
           }}
           className="space-y-3"
@@ -422,7 +466,7 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
       {/* Navigation */}
       <div className="flex justify-between items-center mt-8 pt-6 border-t border-slate-200">
         <button
-          onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+          onClick={() => setCurrentQuestionIndex((prev) => prev - 1)}
           disabled={currentQuestionIndex === 0}
           className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
             currentQuestionIndex === 0
@@ -432,7 +476,7 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
         >
           Previous
         </button>
-        
+
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <Clock className="h-4 w-4" />
           <span>~{assessment.questions.length - currentQuestionIndex} questions left</span>
@@ -441,14 +485,14 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
         {isLastQuestion ? (
           <button
             onClick={submitAssessment}
-            disabled={!canProceed || submitting}
+            disabled={!canProceed || submitMutation.isPending}
             className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-              !canProceed || submitting
+              !canProceed || submitMutation.isPending
                 ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
                 : 'bg-[#001f4d] text-white hover:bg-[#001437]'
             }`}
           >
-            {submitting ? (
+            {submitMutation.isPending ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 Submitting...
@@ -459,7 +503,7 @@ export function AssessmentInterface({ assessmentId }: { assessmentId: string }) 
           </button>
         ) : (
           <button
-            onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
+            onClick={() => setCurrentQuestionIndex((prev) => prev + 1)}
             disabled={!canProceed}
             className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
               !canProceed

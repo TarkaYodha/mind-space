@@ -1,15 +1,30 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { NavBar } from "@/components/layout/navbar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, Clock, User, Mail, Phone, FileText, CheckCircle2, AlertCircle } from "lucide-react"
+import { motion } from 'framer-motion'
+import {
+  AlertCircle,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Mail,
+  Phone,
+  User,
+} from 'lucide-react'
+import { useState } from 'react'
+import { NavBar } from '@/components/layout/navbar'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
 
 interface Professional {
   id: string
@@ -26,62 +41,62 @@ interface TimeSlot {
 }
 
 export default function AppointmentsPage() {
-  const [selectedProfessional, setSelectedProfessional] = useState<string>("")
-  const [selectedDate, setSelectedDate] = useState<string>("")
-  const [selectedTime, setSelectedTime] = useState<string>("")
+  const [selectedProfessional, setSelectedProfessional] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [selectedTime, setSelectedTime] = useState<string>('')
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    reason: "",
-    notes: ""
+    name: '',
+    email: '',
+    phone: '',
+    reason: '',
+    notes: '',
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const professionals: Professional[] = [
     {
-      id: "1",
-      name: "Dr. Sarah Johnson",
-      title: "Clinical Psychologist",
-      specialization: "Anxiety, Depression, Trauma",
-      image: "/professionals/sarah.jpg",
-      availableDays: ["Monday", "Wednesday", "Friday"]
+      id: '1',
+      name: 'Dr. Sarah Johnson',
+      title: 'Clinical Psychologist',
+      specialization: 'Anxiety, Depression, Trauma',
+      image: '/professionals/sarah.jpg',
+      availableDays: ['Monday', 'Wednesday', 'Friday'],
     },
     {
-      id: "2",
-      name: "Dr. Michael Chen",
-      title: "Psychiatrist",
-      specialization: "Medication Management, Mood Disorders",
-      image: "/professionals/michael.jpg",
-      availableDays: ["Tuesday", "Thursday", "Saturday"]
+      id: '2',
+      name: 'Dr. Michael Chen',
+      title: 'Psychiatrist',
+      specialization: 'Medication Management, Mood Disorders',
+      image: '/professionals/michael.jpg',
+      availableDays: ['Tuesday', 'Thursday', 'Saturday'],
     },
     {
-      id: "3",
-      name: "Dr. Emily Rodriguez",
-      title: "Licensed Therapist",
-      specialization: "Stress Management, Life Transitions",
-      image: "/professionals/emily.jpg",
-      availableDays: ["Monday", "Tuesday", "Wednesday", "Thursday"]
+      id: '3',
+      name: 'Dr. Emily Rodriguez',
+      title: 'Licensed Therapist',
+      specialization: 'Stress Management, Life Transitions',
+      image: '/professionals/emily.jpg',
+      availableDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
     },
     {
-      id: "4",
-      name: "Dr. James Wilson",
-      title: "Family Counselor",
-      specialization: "Relationship Issues, Family Therapy",
-      image: "/professionals/james.jpg",
-      availableDays: ["Wednesday", "Thursday", "Friday", "Saturday"]
-    }
+      id: '4',
+      name: 'Dr. James Wilson',
+      title: 'Family Counselor',
+      specialization: 'Relationship Issues, Family Therapy',
+      image: '/professionals/james.jpg',
+      availableDays: ['Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    },
   ]
 
   const timeSlots: TimeSlot[] = [
-    { time: "9:00 AM", available: true },
-    { time: "10:00 AM", available: true },
-    { time: "11:00 AM", available: false },
-    { time: "1:00 PM", available: true },
-    { time: "2:00 PM", available: true },
-    { time: "3:00 PM", available: true },
-    { time: "4:00 PM", available: false },
-    { time: "5:00 PM", available: true }
+    { time: '9:00 AM', available: true },
+    { time: '10:00 AM', available: true },
+    { time: '11:00 AM', available: false },
+    { time: '1:00 PM', available: true },
+    { time: '2:00 PM', available: true },
+    { time: '3:00 PM', available: true },
+    { time: '4:00 PM', available: false },
+    { time: '5:00 PM', available: true },
   ]
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -91,31 +106,38 @@ export default function AppointmentsPage() {
       professional: selectedProfessional,
       date: selectedDate,
       time: selectedTime,
-      ...formData
+      ...formData,
     })
     setIsSubmitted(true)
-    
+
     // Reset form after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false)
-      setSelectedProfessional("")
-      setSelectedDate("")
-      setSelectedTime("")
+      setSelectedProfessional('')
+      setSelectedDate('')
+      setSelectedTime('')
       setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        reason: "",
-        notes: ""
+        name: '',
+        email: '',
+        phone: '',
+        reason: '',
+        notes: '',
       })
     }, 3000)
   }
 
-  const isFormValid = selectedProfessional && selectedDate && selectedTime && formData.name && formData.email && formData.phone && formData.reason
+  const isFormValid =
+    selectedProfessional &&
+    selectedDate &&
+    selectedTime &&
+    formData.name &&
+    formData.email &&
+    formData.phone &&
+    formData.reason
 
   return (
     <>
-  <NavBar />
+      <NavBar />
 
       {/* Main Content */}
       <section className="w-full bg-gradient-to-b from-white to-blue-50 py-20 pt-28">
@@ -131,8 +153,8 @@ export default function AppointmentsPage() {
               Book an <span className="text-[#090847be]">Appointment</span>
             </h1>
             <p className="text-slate-600 text-lg max-w-3xl mx-auto mb-6">
-              Schedule a session with one of our experienced mental health professionals. 
-              Choose a time that works best for you and take the first step towards better mental health.
+              Schedule a session with one of our experienced mental health professionals. Choose a
+              time that works best for you and take the first step towards better mental health.
             </p>
           </motion.div>
 
@@ -148,9 +170,7 @@ export default function AppointmentsPage() {
                 <AlertCircle className="h-6 w-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                  Before You Book
-                </h3>
+                <h3 className="text-lg font-semibold text-blue-800 mb-2">Before You Book</h3>
                 <ul className="text-blue-700 space-y-1 text-sm">
                   <li>• All appointments are confidential and HIPAA compliant</li>
                   <li>• Sessions are typically 50 minutes long</li>
@@ -172,11 +192,11 @@ export default function AppointmentsPage() {
               <h2 className="text-2xl font-bold text-slate-900 mb-6">Our Professionals</h2>
               <div className="space-y-4">
                 {professionals.map((prof) => (
-                  <Card 
+                  <Card
                     key={prof.id}
                     className={`cursor-pointer transition-all ${
-                      selectedProfessional === prof.id 
-                        ? 'border-indigo-500 ring-2 ring-indigo-200 shadow-lg' 
+                      selectedProfessional === prof.id
+                        ? 'border-indigo-500 ring-2 ring-indigo-200 shadow-lg'
                         : 'border-slate-200 hover:border-indigo-300 hover:shadow-md'
                     }`}
                     onClick={() => setSelectedProfessional(prof.id)}
@@ -184,7 +204,10 @@ export default function AppointmentsPage() {
                     <CardContent className="p-4">
                       <div className="flex items-start gap-3">
                         <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                          {prof.name.split(' ').map(n => n[0]).join('')}
+                          {prof.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')}
                         </div>
                         <div className="flex-1">
                           <h3 className="font-semibold text-slate-900">{prof.name}</h3>
@@ -215,15 +238,19 @@ export default function AppointmentsPage() {
                       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle2 className="h-8 w-8 text-green-600" />
                       </div>
-                      <h3 className="text-2xl font-bold text-slate-900 mb-2">Appointment Booked!</h3>
+                      <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                        Appointment Booked!
+                      </h3>
                       <p className="text-slate-600">
-                        We've sent a confirmation email to {formData.email}. 
-                        You'll receive a reminder 24 hours before your appointment.
+                        We've sent a confirmation email to {formData.email}. You'll receive a
+                        reminder 24 hours before your appointment.
                       </p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
-                      <h2 className="text-2xl font-bold text-slate-900 mb-6">Appointment Details</h2>
+                      <h2 className="text-2xl font-bold text-slate-900 mb-6">
+                        Appointment Details
+                      </h2>
 
                       {/* Date Selection */}
                       <div className="space-y-2">
@@ -253,7 +280,7 @@ export default function AppointmentsPage() {
                             <Button
                               key={slot.time}
                               type="button"
-                              variant={selectedTime === slot.time ? "default" : "outline"}
+                              variant={selectedTime === slot.time ? 'default' : 'outline'}
                               className={`${
                                 !slot.available ? 'opacity-50 cursor-not-allowed' : ''
                               } ${selectedTime === slot.time ? 'bg-indigo-600' : ''}`}
@@ -268,7 +295,9 @@ export default function AppointmentsPage() {
 
                       <hr className="my-6" />
 
-                      <h3 className="text-xl font-semibold text-slate-900 mb-4">Your Information</h3>
+                      <h3 className="text-xl font-semibold text-slate-900 mb-4">
+                        Your Information
+                      </h3>
 
                       {/* Name */}
                       <div className="space-y-2">
@@ -281,7 +310,7 @@ export default function AppointmentsPage() {
                           type="text"
                           placeholder="John Doe"
                           value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                           required
                         />
                       </div>
@@ -297,7 +326,7 @@ export default function AppointmentsPage() {
                           type="email"
                           placeholder="john@example.com"
                           value={formData.email}
-                          onChange={(e) => setFormData({...formData, email: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                           required
                         />
                       </div>
@@ -313,7 +342,7 @@ export default function AppointmentsPage() {
                           type="tel"
                           placeholder="(123) 456-7890"
                           value={formData.phone}
-                          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           required
                         />
                       </div>
@@ -324,15 +353,17 @@ export default function AppointmentsPage() {
                           <FileText className="w-4 h-4" />
                           Reason for Visit
                         </Label>
-                        <Select 
+                        <Select
                           value={formData.reason}
-                          onValueChange={(value) => setFormData({...formData, reason: value})}
+                          onValueChange={(value) => setFormData({ ...formData, reason: value })}
                         >
                           <SelectTrigger>
                             <SelectValue placeholder="Select a reason" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="initial-consultation">Initial Consultation</SelectItem>
+                            <SelectItem value="initial-consultation">
+                              Initial Consultation
+                            </SelectItem>
                             <SelectItem value="anxiety">Anxiety Management</SelectItem>
                             <SelectItem value="depression">Depression Support</SelectItem>
                             <SelectItem value="stress">Stress Management</SelectItem>
@@ -350,14 +381,14 @@ export default function AppointmentsPage() {
                           id="notes"
                           placeholder="Any additional information you'd like to share..."
                           value={formData.notes}
-                          onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                           rows={4}
                         />
                       </div>
 
                       {/* Submit Button */}
-                      <Button 
-                        type="submit" 
+                      <Button
+                        type="submit"
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 text-lg"
                         disabled={!isFormValid}
                       >
@@ -388,12 +419,11 @@ export default function AppointmentsPage() {
                 <AlertCircle className="h-6 w-6 text-red-600" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-red-800 mb-2">
-                  In Case of Emergency
-                </h3>
+                <h3 className="text-lg font-semibold text-red-800 mb-2">In Case of Emergency</h3>
                 <p className="text-red-700 text-sm">
-                  If you're experiencing a mental health crisis, please don't wait for an appointment. 
-                  Call the National Suicide Prevention Lifeline at <strong>988</strong> or visit your nearest emergency room.
+                  If you're experiencing a mental health crisis, please don't wait for an
+                  appointment. Call the National Suicide Prevention Lifeline at <strong>988</strong>{' '}
+                  or visit your nearest emergency room.
                 </p>
               </div>
             </div>
