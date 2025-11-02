@@ -8,7 +8,16 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
 import { ZodError } from 'zod'
-import type { Context } from './context'
+
+type Context = {
+  session: {
+    user?: {
+      id?: string | null
+      [key: string]: unknown
+    } | null
+  } | null
+  db: any
+}
 
 /**
  * Initialize tRPC with context type

@@ -91,12 +91,12 @@ export const assessmentRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const result = await ctx.db.query.assessmentResults.findFirst({
-        where: (results, { and, eq }) =>
+        where: (results: any, { and, eq }: any) =>
           and(
             eq(results.userId, ctx.session.user.id),
             eq(results.assessmentType, input.assessmentType),
           ),
-        orderBy: (results, { desc }) => [desc(results.createdAt)],
+        orderBy: (results: any, { desc }: any) => [desc(results.createdAt)],
       })
 
       return result || null
@@ -121,7 +121,7 @@ export const assessmentRouter = router({
       cutoffDate.setDate(cutoffDate.getDate() - days)
 
       const allResults = await ctx.db.query.assessmentResults.findMany({
-        where: (results, { and, eq, gte }) =>
+        where: (results: any, { and, eq, gte }: any) =>
           assessmentType
             ? and(
                 eq(results.userId, ctx.session.user.id),
@@ -129,7 +129,7 @@ export const assessmentRouter = router({
                 gte(results.createdAt, cutoffDate),
               )
             : and(eq(results.userId, ctx.session.user.id), gte(results.createdAt, cutoffDate)),
-        orderBy: (results, { asc }) => [asc(results.createdAt)],
+        orderBy: (results: any, { asc }: any) => [asc(results.createdAt)],
       })
 
       // Calculate statistics
